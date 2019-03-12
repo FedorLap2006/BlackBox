@@ -20,7 +20,13 @@ Triangle::Triangle(CShaderProgram *program) :
   glm::mat4 rot = glm::scale(glm::vec3(1.0f, 2.0f, 1.0f));
 
   m_Vertices = m_Vertices * rot;
-  VertexBuffer *vb = new VertexBuffer(m_Vertices.data(),m_Vertices.size()*sizeof(GLfloat));
+
+  addMesh({ 0.0 }, m_Vertices);
+
+  // VertexBuffer *vb = new VertexBuffer(m_Vertices.data(),m_Vertices.size()*sizeof(GLfloat));
+
+
+
   // m_Geom = new Geometry(vb, nullptr);
 }
 
@@ -30,13 +36,13 @@ Triangle::~Triangle()
 }
 
 void Triangle::draw() {
-  VertexBuffer *vb = m_Geom->getVertexBuffer();
-  void *d = vb->GetGLarray();
+  // VertexBuffer *vb = m_Geom->getVertexBuffer();
+  /*void *d = vb->GetGLarray();
   std::vector<float> *v = reinterpret_cast<std::vector<float>*>(d);
   *v = *v * glm::mat4(0.0f);
-
-  m_Shader->use();
-  vb->draw();
+*/
+  // m_Shader->use();
+  // vb->draw();
 }
 
 void Triangle::move()

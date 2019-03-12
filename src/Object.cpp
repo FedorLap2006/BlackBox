@@ -158,19 +158,19 @@ public:
 
 #endif
 
-Object::Object() 
-{
-
-}
-
 
 void Object::draw() {
-  if (m_Geom && m_Geom->getVertexBuffer()) {
+
+  for (auto it : m_Meshs) {
+    it.draw(m_WorldMatrix);
+  }
+ /* if (m_Geom && m_Geom->getVertexBuffer()) {
     VertexBuffer *vb = m_Geom->getVertexBuffer();
     
     vb->draw();
-  }
+  }*/
 }
+
 
 void Object::move() {}
 

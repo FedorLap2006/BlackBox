@@ -93,10 +93,6 @@ bool CShader::bind() {
 void CShader::print() {
   cout << m_Text << endl; 
 }
-void CShader::swapVariables() {
-  for (auto it : m_Params) {
-  }
-}
 
 string CShader::getName() {
   return m_Path;
