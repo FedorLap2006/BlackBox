@@ -36,7 +36,6 @@ void VertexBuffer::unbind()
 
 void VertexBuffer::draw()
 {
-
   glBindVertexArray(VAO); 
   glBufferData(GL_ARRAY_BUFFER, m_Size, m_Data, GL_STATIC_DRAW);
   // 1. Затем установим указатели на вершинные атрибуты

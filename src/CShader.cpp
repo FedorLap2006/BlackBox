@@ -93,6 +93,10 @@ bool CShader::bind() {
 void CShader::print() {
   cout << m_Text << endl; 
 }
+void CShader::swapVariables() {
+  for (auto it : m_Params) {
+  }
+}
 
 string CShader::getName() {
   return m_Path;
@@ -141,6 +145,7 @@ bool CShaderProgram::link() {
 void CShaderProgram::use() {
   glUseProgram(m_Program);
 }
+
 
 GLuint CShaderProgram::get() {
   return m_Program;

@@ -22,7 +22,7 @@ bool CGame::init(bool debug) {
     if (m_ShaderProgram == nullptr) return false;
     else {
 	  m_ShaderProgram->create();
-      world.add("triangle", new Triangle(m_ShaderProgram, 0.0f));
+      world.add("triangle", new Triangle(m_ShaderProgram));
     return true;
     }
   } 

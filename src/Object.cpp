@@ -1,4 +1,6 @@
 #include "Object.hpp"
+#include <VertexBuffer.hpp>
+#include <MatrixTranform.hpp>
 #include <fstream>
 #include <cctype>
 
@@ -161,7 +163,14 @@ Object::Object()
 
 }
 
-void Object::draw() {}
+
+void Object::draw() {
+  if (m_Geom && m_Geom->getVertexBuffer()) {
+    VertexBuffer *vb = m_Geom->getVertexBuffer();
+    
+    vb->draw();
+  }
+}
 
 void Object::move() {}
 

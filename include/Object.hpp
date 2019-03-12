@@ -3,15 +3,19 @@
 #include <IObject.hpp>
 #include <IGeometry.hpp>
 #include <glm/glm.hpp>
-
+#include <Mesh.hpp>
 
 
 class Object : public IObject {
 protected:
+  CShaderProgram *m_Shader;
 	glm::vec3 m_Pos;
-  Geometry *m_Geom;
+  Mesh *m_Mesh;
+  // Geometry *m_Geom;
   OBJType ty;
-  Object();
+
+  Object(glm::vec3 pos) : m_Pos(pos) {}
+  Object() : m_Pos(0) {}
 public:
 
 	static Object* Load(string path);

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Triangle::Triangle(CShaderProgram *program,float rotAngle) :
+Triangle::Triangle(CShaderProgram *program) :
   m_Shader(program)
 {
   ty = OBJType::TPRIMITIVE;
@@ -21,7 +21,7 @@ Triangle::Triangle(CShaderProgram *program,float rotAngle) :
 
   m_Vertices = m_Vertices * rot;
   VertexBuffer *vb = new VertexBuffer(m_Vertices.data(),m_Vertices.size()*sizeof(GLfloat));
-  m_Geom = new Geometry(vb, nullptr);
+  // m_Geom = new Geometry(vb, nullptr);
 }
 
 Triangle::~Triangle() 
@@ -31,6 +31,9 @@ Triangle::~Triangle()
 
 void Triangle::draw() {
   VertexBuffer *vb = m_Geom->getVertexBuffer();
+  void *d = vb->GetGLarray();
+  std::vector<float> *v = reinterpret_cast<std::vector<float>*>(d);
+  *v = *v * glm::mat4(0.0f);
 
   m_Shader->use();
   vb->draw();

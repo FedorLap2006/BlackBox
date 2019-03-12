@@ -14,7 +14,7 @@ private:
   CShaderProgram *m_Shader;  
   std::vector<float> m_Vertices;
 public:
-  Triangle(CShaderProgram *program,float rotAngle);
+  Triangle(CShaderProgram *program);
   ~Triangle();
   void draw(); 
   void move(); 
