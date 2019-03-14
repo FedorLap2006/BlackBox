@@ -1,0 +1,16 @@
+language: cpp
+compiler: g++
+sudo: true
+
+os: linux
+# addons:
+#    apt:
+#        sources:
+#            - ubuntu-toolchain-r-test
+#        packages:
+#
+script:
+    - mkdir -f build
+    - cd build
+    - cmake -DBUILD_SHARED_LIBS=OFF -DGLFW_INSTALL_ENABLE=OFF ..
+    - make -j
