@@ -29,8 +29,8 @@ bool Camera::checkFrustum(Object* obj) {
   bool res = true;
   
   BoundSphere bs = obj->getBSphere();
-  
-  for (auto fr_plane : frustum) {
+  for (int i = 0; i < 6; i++) {
+    auto fr_plane = m_Frustum[i];
     if (
           fr_plane.pos.x * bs.pos.x + 
           fr_plane.pos.y * bs.pos.y + 
@@ -41,4 +41,8 @@ bool Camera::checkFrustum(Object* obj) {
   }
 
   return res;
+}
+
+Camera::Camera(double w, double h) {
+
 }

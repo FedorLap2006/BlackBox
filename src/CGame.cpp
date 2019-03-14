@@ -23,6 +23,10 @@ bool CGame::init(bool debug) {
     else {
 	  m_ShaderProgram->create();
       world.add("triangle", new Triangle(m_ShaderProgram));
+      Camera *cam = new Camera();
+      world.add("test-cam", cam);
+      world.setCurrentCamera("test-cam");
+
     return true;
     }
   } 

@@ -15,13 +15,13 @@ class World {
 private:
   std::map<string,Object*> m_Objs;
   std::map<string, Camera*> m_Cams;
-  Camera* m_CurCam;
+  Camera* m_CurCam = nullptr;
 
   glm::mat4 m_ProjMatrix;
 public:
   void draw() {
+    if (!m_CurCam) return;
     for (const auto object : m_Objs) {
-
       if (m_CurCam->checkFrustum(object.second)) {
         // object.second->draw(m_ProjMatrix * m_CurCam->getViewMatrix() * glm::mat4(1.0f));
 
@@ -39,9 +39,15 @@ public:
   void add(string name, Camera* cam) {
     m_Cams[name] = cam;
   }
+  void setCurrentCamera(string name) {
+    bool isExist = std::find(m_Cams.begin(), m_Cams.end(), [&](const std::string & key) { return key ==  name; }) != m_Cams.end();
+    if (isExist) {
+      m_CurCam = m_Cams[name];
+    }
+  }
   void del(string name) { m_Objs.erase(name); }
   void delCam(string name) { m_Cams.erase(name); }
 
-  Object*& operator[] (string name) { return m_Objs[name]; }
+  // Object*& operator[] (string name) { return m_Objs[name]; }
 
 };
