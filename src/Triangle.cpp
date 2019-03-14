@@ -9,7 +9,7 @@ using namespace std;
 Triangle::Triangle(CShaderProgram *program) :
   m_Shader(program)
 {
-  ty = OBJType::TPRIMITIVE;
+  // ty = OBJType::TPRIMITIVE;
   m_Vertices = {
     -0.5f, -0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
@@ -21,7 +21,7 @@ Triangle::Triangle(CShaderProgram *program) :
 
   m_Vertices = m_Vertices * rot;
 
-  addMesh({ 0.0 }, m_Vertices);
+  addMesh({ 0.0,0.0,0.0 }, m_Vertices);
 
   // VertexBuffer *vb = new VertexBuffer(m_Vertices.data(),m_Vertices.size()*sizeof(GLfloat));
 
@@ -36,6 +36,11 @@ Triangle::~Triangle()
 }
 
 void Triangle::draw() {
+  Mesh* m = getMesh(0);
+
+  m->rotate(102.0, { 0,1,2 });
+
+  m->draw(m_WorldMatrix);
   // VertexBuffer *vb = m_Geom->getVertexBuffer();
   /*void *d = vb->GetGLarray();
   std::vector<float> *v = reinterpret_cast<std::vector<float>*>(d);
@@ -45,12 +50,14 @@ void Triangle::draw() {
   // vb->draw();
 }
 
-void Triangle::move()
+void Triangle::move(glm::vec3 m)
 {
-
+  Mesh* mesh = getMesh(0);
+  mesh->translate(m);
 }
 
-void Triangle::rotate()
+void Triangle::rotate(double angle,glm::vec3 m)
 {
-
+  Mesh* mesh = getMesh(0);
+  mesh->rotate(angle, m);
 }

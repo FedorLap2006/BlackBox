@@ -172,9 +172,9 @@ void Object::draw() {
 }
 
 
-void Object::move() {}
+void Object::move(glm::vec3 m) {}
 
-void Object::rotate() {}
+void Object::rotate(double angle, glm::vec3 m) {}
 
 Object * Object::Load(string path)
 {

@@ -24,7 +24,9 @@ public:
 
       if (m_CurCam->checkFrustum(object.second)) {
         // object.second->draw(m_ProjMatrix * m_CurCam->getViewMatrix() * glm::mat4(1.0f));
-        object.second->setWorldMatrix(m_ProjMatrix * m_CurCam->getViewMatrix() * glm::vec4(object.second->getBSphere().pos,1.0));
+
+        object.second->setWorldMatrix(m_ProjMatrix * m_CurCam->getViewMatrix());
+
         object.second->draw();
       }
 

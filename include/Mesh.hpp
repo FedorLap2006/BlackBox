@@ -27,6 +27,7 @@ public:
       m_Verts(Verts) {
 
    }
+  glm::vec3 getPos() { return m_Pos; }
   void draw(glm::mat4 mat) override; // -> CShaderProgram->use()
   VertexBuffer* getVBuffer() { return m_VertexBuf; }
   std::vector<float> getVerts() { return m_Verts; }

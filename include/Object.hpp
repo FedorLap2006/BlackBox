@@ -38,6 +38,13 @@ public:
 
   BoundSphere getBSphere() { return m_boundS; }
 
+  Mesh* getMesh(size_t index) { 
+    if (index >= m_Meshs.size()) {
+      return nullptr;
+    }
+    return &m_Meshs[index];
+  }
+
   void addMesh(glm::vec3 pos,std::vector<float> verts) { 
     if (verts.size() <= 0 || !(verts.size() % 3)) return;
     Mesh mesh(m_Shader, verts);
@@ -55,8 +62,8 @@ public:
     m_boundS = { calcBRadius(m_boundS.radius,verts), m_Pos };
   }
 	static Object* Load(string path);
-  virtual void move() override;
-  virtual void rotate() override;
+  virtual void move(glm::vec3 m) override;
+  virtual void rotate(double angle, glm::vec3 m) override;
   virtual void draw() override;
   // virtual OBJType getType() override { return ty; }
 };

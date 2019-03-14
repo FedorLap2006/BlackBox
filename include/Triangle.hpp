@@ -17,6 +17,6 @@ public:
   Triangle(CShaderProgram *program);
   ~Triangle();
   void draw(); 
-  void move(); 
-  void rotate(); 
+  void move(glm::vec3 m);
+  void rotate(double angle, glm::vec3 m);
 };

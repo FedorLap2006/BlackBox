@@ -1,6 +1,6 @@
 #pragma once
 
-// #include <glm/glm.hpp>
+#include <glm/fwd.hpp>
 
 
 enum OBJType {
@@ -11,8 +11,8 @@ enum OBJType {
 
 struct IObject
 {
-  virtual void move() = 0;
-  virtual void rotate() = 0;
+  virtual void move(glm::vec3 m) = 0;
+  virtual void rotate(double angle, glm::vec3 m) = 0;
   virtual void draw() = 0;
   // virtual OBJType getType() = 0;
 };
