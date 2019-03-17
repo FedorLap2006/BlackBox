@@ -2,6 +2,7 @@
 #include "CWindow.hpp"
 #include <iostream>
 
+
 using namespace std;
 
 CGame::CGame(char *title) : 
@@ -22,8 +23,11 @@ bool CGame::init(bool debug) {
     if (m_ShaderProgram == nullptr) return false;
     else {
 	  m_ShaderProgram->create();
-      world.add("triangle", new Triangle(m_ShaderProgram));
-      Camera *cam = new Camera();
+      Triangle* t = new Triangle(m_ShaderProgram);
+      t->move(glm::vec3(0.0f, 0.5f, 0.0f));
+      world.add("triangle",t);
+      Camera *cam = new CameraFPS();
+      cam->move(glm::vec3(0.0, 0.0, 0.2));
       world.add("test-cam", cam);
       world.setCurrentCamera("test-cam");
 

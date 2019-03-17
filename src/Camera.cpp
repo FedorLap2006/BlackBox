@@ -43,6 +43,6 @@ bool Camera::checkFrustum(Object* obj) {
   return res;
 }
 
-Camera::Camera(double w, double h) {
 
-}
+Camera::Camera() {}
+CameraFPS::CameraFPS() {}

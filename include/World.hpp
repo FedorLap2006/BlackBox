@@ -17,15 +17,18 @@ private:
   std::map<string, Camera*> m_Cams;
   Camera* m_CurCam = nullptr;
 
-  glm::mat4 m_ProjMatrix;
+  glm::mat4 m_ProjMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 public:
-  void draw() {
+  void draw() { // render frame
     if (!m_CurCam) return;
+    
+    glm::mat4 m = m_ProjMatrix * m_CurCam->getViewMatrix();
+
     for (const auto object : m_Objs) {
       if (m_CurCam->checkFrustum(object.second)) {
         // object.second->draw(m_ProjMatrix * m_CurCam->getViewMatrix() * glm::mat4(1.0f));
 
-        object.second->setWorldMatrix(m_ProjMatrix * m_CurCam->getViewMatrix());
+        object.second->setWorldMatrix(m);
 
         object.second->draw();
       }
@@ -40,7 +43,7 @@ public:
     m_Cams[name] = cam;
   }
   void setCurrentCamera(string name) {
-    bool isExist = std::find(m_Cams.begin(), m_Cams.end(), [&](const std::string & key) { return key ==  name; }) != m_Cams.end();
+    bool isExist = m_Cams.count(name) != 0;
     if (isExist) {
       m_CurCam = m_Cams[name];
     }

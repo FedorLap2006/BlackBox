@@ -14,8 +14,8 @@ Triangle::Triangle(CShaderProgram *program) :
     -0.5f, -0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
     0.0f,  0.5f, 0.0f
-  };  
-  
+  };
+
   // glm::mat4 rot = glm::rotate(glm::mat4(1.0f),rotAngle,glm::vec3(1.0, 0.0, 0.0)); 
   glm::mat4 rot = glm::scale(glm::vec3(1.0f, 2.0f, 1.0f));
 
@@ -29,6 +29,7 @@ Triangle::Triangle(CShaderProgram *program) :
 
   // m_Geom = new Geometry(vb, nullptr);
 }
+
 
 Triangle::~Triangle() 
 {

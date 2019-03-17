@@ -1,5 +1,7 @@
 #pragma once
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 #include <map>
 
@@ -92,11 +94,6 @@ public:
   void setVariable(std::string name, glm::vec3 val) {
     GLuint varID = glGetUniformLocation(m_Program, name.c_str());
     glUniform3f(varID, val.x, val.y, val.z);
-  }
-
-  void setVariable(std::string name, glm::vec3 val) {
-    GLuint varID = glGetUniformLocation(m_Program, name.c_str());
-    glUniform3f(varID,val.x,val.y,val.z);
   }
 
   void setVariable(std::string name, glm::vec4 val) {
