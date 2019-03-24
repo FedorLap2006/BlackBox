@@ -4,6 +4,7 @@
 #include <IGeometry.hpp>
 #include <glm/glm.hpp>
 #include <Mesh.hpp>
+#include <iostream>
 
 struct BoundSphere {
   float radius;
@@ -46,7 +47,7 @@ public:
   }
 
   void addMesh(glm::vec3 pos,std::vector<float> verts) { 
-    if (verts.size() <= 0 || !(verts.size() % 3)) return;
+    if (verts.size() <= 0 || ((verts.size() % 3) != 0)) { return; } // 0,0,0 -- 0 != 0 ; 0,0 -- 2 != 0
     Mesh mesh(m_Shader, verts);
     mesh.translate(pos);
     m_Meshs.push_back(mesh);

@@ -54,6 +54,7 @@ void Triangle::draw() {
 void Triangle::move(glm::vec3 m)
 {
   Mesh* mesh = getMesh(0);
+  // if (!mesh) return;
   mesh->translate(m);
 }
 
