@@ -25,6 +25,20 @@ bool SphereInFrustum(vec3 &pos, float &radius, vec4 *frustum_planes)
 
 */
 
+
+std::ostream& operator << (std::ostream &th, glm::mat4 m) {
+  for (size_t it = 0; it < 4; it++) {
+    for (size_t it2 = 0; it2 < 4; it2++) {
+      th << m[it][it2] << "|";
+    }
+    for (size_t it2 = 0; it2 < 4; it2++) {
+      th << "-";
+    }
+    th << "\n";
+  }
+  return th;
+}
+
 bool Camera::checkFrustum(Object* obj) {
   bool res = true;
   

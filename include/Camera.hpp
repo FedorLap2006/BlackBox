@@ -3,9 +3,15 @@
 #include <glm/glm.hpp>
 #include <Object.hpp>
 
+#include <iostream>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
+
+
+
+std::ostream& operator << (std::ostream &th, glm::mat4 m);
 
 class Camera {
 protected:
@@ -18,10 +24,11 @@ protected:
   Plane m_Frustum[6] = { {{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,1.0} } };
 public:
   // Camera(double w, double h);
+
   Camera();
   void move(glm::vec3 v) {
-
-    glm::mat4 tmat = glm::translate(glm::mat4(1.0f), v);
+    glm::mat4 tmat = glm::translate(m_ViewMatrix, v);
+    std::cout << tmat;
     m_ViewMatrix *= tmat;
   }
   virtual void rotate(float angle, glm::vec3 rot) = 0;
@@ -35,7 +42,8 @@ public:
   CameraFPS();
   void rotate(float angle,glm::vec3 rot) {
     // m_ViewMatrix = lookAt(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-    glm::mat4 tmat = glm::rotate(glm::mat4(1.0f), angle, rot);
+    glm::mat4 tmat = glm::rotate(m_ViewMatrix, angle, rot);
+    std::cout << tmat;
     m_ViewMatrix *= tmat;
   }
 };
@@ -44,6 +52,7 @@ class CameraAny : public Camera {
 public:
   void rotate(float angle, glm::vec3 rot) {
     glm::mat4 tmat = glm::yawPitchRoll(rot.x, rot.y, rot.z);
+    std::cout << tmat;
     m_ViewMatrix *= tmat;
   }
 
