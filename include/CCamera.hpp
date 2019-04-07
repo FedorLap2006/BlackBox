@@ -30,12 +30,18 @@ public:
   
   virtual inline void fetchLook(bool manual=false) { 
     if (!manual) {
-      glm::vec3 up = { 0,1,0 };
-      m_Direction = glm::normalize(m_Pos - m_Target);
-      m_Right = glm::cross(up, m_Direction);
-      m_Up = glm::cross(m_Direction, m_Right);
+      calcVecs();
     }
-    m_View = glm::lookAt(m_Pos, m_Target, m_Up); }
+    m_View = glm::lookAt(m_Pos, m_Target, m_Up); 
+  }
+
+  virtual inline void calcVecs() {
+    // glm::vec3 up = { 0,1,0 };
+    m_Direction = glm::normalize(m_Pos - m_Target);
+    // m_Right = glm::cross(up, m_Direction);
+    m_Right = glm::cross(m_Up, m_Direction);
+    m_Up = glm::cross(m_Direction, m_Right);
+  }
 
   virtual void move(glm::vec3 v) = 0;
   virtual void rotate(glm::vec3 v) = 0;
