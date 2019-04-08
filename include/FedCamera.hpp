@@ -11,16 +11,16 @@
 
 class ICamera {
 protected:
-  glm::mat4 m_View;
-  glm::mat4 m_Proj;
+  glm::mat4 m_View = glm::lookAt(glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0,1.0f,0.0f));
+  glm::mat4 m_Proj = glm::perspective(45.0f, 16 / 9.0f, 0.1f, 100.0f);
 
-  glm::vec3 m_Angles;
-  glm::vec3 m_Pos;
+  glm::vec3 m_Angles = { 0,0,0 };
+  glm::vec3 m_Pos = { 0,0,3 };
   // Vecs
-  glm::vec3 m_Up;
-  glm::vec3 m_Right;
-  glm::vec3 m_Direction;
-  glm::vec3 m_Target;
+  glm::vec3 m_Up = { 0,1,0 };
+  glm::vec3 m_Right = { 1,0,0 };
+  glm::vec3 m_Direction = { 0,0,0 };
+  glm::vec3 m_Target = -glm::normalize(m_Pos - glm::vec3(0, 0, 0));
 public:
   /*
   virtual void yaw(float angle) = 0;

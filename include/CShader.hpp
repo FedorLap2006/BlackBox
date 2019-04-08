@@ -1,5 +1,5 @@
 #pragma once
-#include <glad/glad.h>
+#include <Opengl.hpp>
 #include <glm/fwd.hpp>
 #include <string>
 
@@ -74,6 +74,7 @@ public:
   bool attach(CShader *shader);
   bool link();
   void use();
+  void unuse();
   void setUniformValue(const char *name, float value);
   void setUniformValue(const char *name, glm::vec1 value);
   void setUniformValue(const char *name, glm::vec2 value);

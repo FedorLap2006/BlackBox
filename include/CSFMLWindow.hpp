@@ -1,11 +1,13 @@
 #pragma once
 #include "IWindow.hpp"
+#include "InputHandler.hpp"
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <glad/glad.h>
+#include <Opengl.hpp>
 
 class CSFMLWindow :
-  public IWindow
+  public IWindow,
+  public IInputEventListener
 {
   static constexpr int DEFAULT_WIDTH = 1024;
   static constexpr int DEFAULT_HEIGHT = 768;
@@ -16,12 +18,11 @@ class CSFMLWindow :
   int m_Width;
   int m_Height;
   char *m_Title;
-  GLfloat m_BackColor[4] = { 0.5, 0.3, 0.8, 1.0 };
+  GLfloat m_BackColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 public:
   CSFMLWindow(char *title = DEFAULT_TITLE, int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT);
   ~CSFMLWindow();
 
-  // Унаследовано через IWindow
   virtual bool create() override;
   virtual bool init() override;
   virtual void update() override;
@@ -30,5 +31,13 @@ public:
   virtual void swap() override;
   virtual void setTitle(char *) override;
   virtual void show() override;
+
+  // IWindow interface
+public:
+  virtual void *getHandle() override;
+
+  // IInputEventListener interface
+public:
+  virtual bool OnInputEvent(sf::Event &event) override;
 };
 

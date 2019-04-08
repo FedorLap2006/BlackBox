@@ -12,16 +12,17 @@ void CCameraFPS::rotate(glm::vec3 v) {
   glm::quat yrot = glm::angleAxis(v.y, glm::vec3(0.0f, 1.0f, 0.0f));
   glm::quat zrot = glm::angleAxis(v.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-  
-  m_Direction = m_Direction * zrot;
-  m_Right = m_Right * xrot;
-  m_Up = m_Up * yrot;
+
+  m_Target = m_Target * xrot * yrot * zrot;
+  m_Right = m_Right * xrot * yrot * zrot;
+  m_Up = m_Up * xrot * yrot * zrot;
+
 
   m_View = m_View * glm::mat4_cast(xrot * yrot * zrot);
   // glm::quat_cast(glm::yawPitchRoll(v.x, v.y, v.z));
   // glm::mat4_cast(glm::quat(...));
-  // fetchLook(true);
-  calcVecs();
+  fetchLook(true);
+  // calcVecs();
 }
 
 void CCameraFPS::setTarget(glm::vec3 v) {
@@ -40,16 +41,16 @@ void CCameraFly::rotate(glm::vec3 v) {
   glm::quat zrot = glm::angleAxis(v.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 
-  m_Direction = m_Direction * zrot;
-  m_Right = m_Right * xrot;
-  m_Up = m_Up * yrot;
+  m_Target = m_Target * xrot * yrot * zrot;
+  m_Right = m_Right * xrot * yrot * zrot;
+  m_Up = m_Up * xrot * yrot * zrot;
 
 
   m_View = m_View * glm::mat4_cast(xrot * yrot * zrot);
   // glm::quat_cast(glm::yawPitchRoll(v.x, v.y, v.z));
   // glm::mat4_cast(glm::quat(...));
-  // fetchLook(true);
-  calcVecs();
+  fetchLook(true);
+  // calcVecs();
 }
 
 void CCameraFly::setTarget(glm::vec3 v) {
@@ -73,6 +74,8 @@ void CCameraFly::yawPitchRoll(float yaw, float pitch, float roll) {
   m_Up = glm::rotate(m_Up, roll, glm::normalize(m_Target));
   m_Right = glm::cross(m_Up, m_Target);
   // calcVecs();
+
+  m_Direction = glm::normalize(m_Pos - m_Target);
 
   fetchLook(true);
 
