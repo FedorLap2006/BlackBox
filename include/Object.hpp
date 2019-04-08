@@ -17,6 +17,7 @@ protected:
   CShaderProgram *m_Shader;
   OBJType m_type;
   Object();
+  Object(const Object &obj);
   static void parse(std::string filename, std::vector<Vertex> &vs, CShaderProgram **shader);
 public:
 
@@ -26,10 +27,10 @@ public:
   virtual void scale(glm::vec3 v) override;
   virtual void draw() override;
   virtual OBJType getType() override { return m_type; }
-
-  // Унаследовано через IObject
   virtual void setType(OBJType) override;
-
-  // Унаследовано через IObject
   virtual CShaderProgram * getShaderProgram() override;
+  virtual glm::mat4 getTransform() override;
+
+  // РЈРЅР°СЃР»РµРґРѕРІР°РЅРѕ С‡РµСЂРµР· IObject
+  virtual void setShaderProgram(CShaderProgram* shader) override;
 };
