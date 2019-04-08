@@ -34,7 +34,7 @@ private:
     INIT,
     MENU,
     RUN,
-    RELASE
+    RELEASE
   };
   std::stack<GameState*> states;
 

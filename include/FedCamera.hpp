@@ -58,3 +58,11 @@ public:
   void rotate(glm::vec3 v) override;
   void setTarget(glm::vec3 t) override;
 };
+
+class CCameraFly : public ICamera {
+public:
+  void move(glm::vec3 v) override;
+  void rotate(glm::vec3 v) override;
+  void setTarget(glm::vec3 t) override;
+  void yawPitchRoll(float yaw, float pitch, float roll);
+};

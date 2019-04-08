@@ -72,12 +72,15 @@ bool CGame::init_opbject() {
     char n[5];
     obj = Primitive::create(Primitive::CUBE, m_ShaderProgram);
     obj->move({
-      rand() % 3 -1,
-      rand()% 3 - 1,
-      rand()% 3 - 1
+      rand() % 5 -1,
+      rand()% 5 - 1,
+      rand()% 5 - 1
       });
+    obj->getShaderProgram()->setUniformValue("Projection",);
     world.add("cube" + char(i + '0'), obj);
   }
+  
+
 	/*
 	world.add("triangle", new Triangle(m_ShaderProgram));
 	world.add("triangle", new Triangle(m_ShaderProgram));
