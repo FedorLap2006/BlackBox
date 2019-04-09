@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include <InputHandler.hpp>
+
 #include <glm/gtx/quaternion.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -8,13 +11,18 @@
 #include <glm/gtx/rotate_vector.hpp>
 // #include <glm/gtx/rotate_normalized_axis.hpp>
 
+#define PI 3.1415926535897932384626433832795
+#define PIdiv180 (PI/180.0)
+
 
 class ICamera {
 protected:
+  const float SPEED = 0.50f;
+
   glm::mat4 m_View = glm::lookAt(glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0,1.0f,0.0f));
   glm::mat4 m_Proj = glm::perspective(45.0f, 16 / 9.0f, 0.1f, 100.0f);
 
-  glm::vec3 m_Angles = { 0,0,0 };
+  // glm::vec3 m_Angles = { 0,0,0 };
   glm::vec3 m_Pos = { 0,0,3 };
   // Vecs
   glm::vec3 m_Up = { 0,1,0 };
@@ -52,17 +60,44 @@ public:
   float* getViewRef() { return glm::value_ptr(m_View); }
 };
 
-class CCameraFPS : public ICamera {
+class CCameraFPS : public ICamera, public IInputEventListener {
 public:
+  struct {
+    float yaw = 0;
+    float pitch = 0;
+    // float roll = 0;
+    float x = 0;
+    float y = 0;
+    float z = 0;
+  }m_Angles;
+
   void move(glm::vec3 v) override;
   void rotate(glm::vec3 v) override;
+  void yawRotate(float a);
+  void pitchRotate(float a);
+
+  void yawPitch(float yaw,float pitch);
+
   void setTarget(glm::vec3 t) override;
+  bool OnInputEvent(sf::Event &event) override;
 };
 
-class CCameraFly : public ICamera {
+class CCameraFly : public ICamera, public IInputEventListener {
 public:
+  struct {
+    float yaw = 0;
+    float pitch = 0;
+    float roll = 0;
+    float x = 0;
+    float y = 0;
+    float z = 0;
+  }m_Angles;
   void move(glm::vec3 v) override;
   void rotate(glm::vec3 v) override;
   void setTarget(glm::vec3 t) override;
+  void yawRotate(float yawa);
+  void pitchRotate(float pitcha);
+  void rollRotate(float rolla);
   void yawPitchRoll(float yaw, float pitch, float roll);
+  bool OnInputEvent(sf::Event &event) override;
 };
