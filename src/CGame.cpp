@@ -42,33 +42,32 @@ bool CGame::init(ISystem *pSystem) {
     }
     cout << "Objects inited" << endl;
   }
-  CCameraFPS *camera = new CCameraFPS();
+//  CCameraFPS *camera = new CCameraFPS();
 
-  // inputHandler->AddEventListener(camera);
-  inputHandler->AddEventListener(reinterpret_cast<CWindow*>(m_Window));
-  camera->move({ 0,0,1 });
-  camera->rotate({ 0,10,0 });
-  // camera->yawPitchRoll(60, 10, 30);
-  camera->move({ 0,3,-1 });
-  m_World->setCamera(camera);
-
-        if (!init_object()) {
-			cout << "Failed init objects" << endl;
-			return false;
-		}
-		cout << "Objects inited" << endl;
-  }
-//  m_camera1 = new HackCamera();
-//  m_camera2 = new HackCamera();
-//  //m_camera1->setView(m_Window->getWidth(), m_Window->getHeight());
-//  //m_camera2->setView(m_Window->getWidth(), m_Window->getHeight());
-//  inputHandler->AddEventListener(m_camera1);
-//  inputHandler->AddEventListener(m_camera2);
+//  // inputHandler->AddEventListener(camera);
 //  inputHandler->AddEventListener(reinterpret_cast<CWindow*>(m_Window));
-//  inputHandler->AddEventListener(reinterpret_cast<CGame*>(this));
-//  m_World->setCamera(m_camera1);
-//  m_active_camera = m_camera1;
-//  //m_World->setCamera(camera2);
+//  camera->move({ 0,0,1 });
+//  camera->rotate({ 0,10,0 });
+//  // camera->yawPitchRoll(60, 10, 30);
+//  camera->move({ 0,3,-1 });
+//  m_World->setCamera(camera);
+
+//        if (!init_object()) {
+//			cout << "Failed init objects" << endl;
+//			return false;
+//		}
+//		cout << "Objects inited" << endl;
+  m_camera1 = new HackCamera();
+  m_camera2 = new HackCamera();
+  //m_camera1->setView(m_Window->getWidth(), m_Window->getHeight());
+  //m_camera2->setView(m_Window->getWidth(), m_Window->getHeight());
+  inputHandler->AddEventListener(m_camera1);
+  inputHandler->AddEventListener(m_camera2);
+  inputHandler->AddEventListener(reinterpret_cast<CWindow*>(m_Window));
+  inputHandler->AddEventListener(reinterpret_cast<CGame*>(this));
+  m_World->setCamera(m_camera1);
+  m_active_camera = m_camera1;
+  //m_World->setCamera(camera2);
 
   return true;
 }
