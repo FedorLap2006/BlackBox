@@ -15,12 +15,13 @@ private:
   ICamera *m_Camera;
 public:
   World();
-  void draw();
+  void draw(float dt);
 
   void setCamera(ICamera *camera);
   void add(string name, Object* o);
   inline void del(string name) { m_Objs.erase(name); }
   inline void delCam(string name) { m_Cams.erase(name); }
+  void update(float deltatime);
 
   Object*& operator[] (string name) { return m_Objs[name]; }
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#define EXPORT _cdecl
+#define EXPORT extern "C"
+
 struct IWindow {
  virtual bool create() = 0;
  virtual bool init() = 0;
@@ -10,7 +11,9 @@ struct IWindow {
  virtual void swap() = 0;
  virtual void setTitle(char *) = 0;
  virtual void show() = 0;
+ virtual int getWidth() = 0;
+ virtual int getHeight() = 0;
  virtual void *getHandle() = 0;
 };
 
-IWindow* EXPORT CreateIWindow();
+EXPORT IWindow* CreateIWindow();
