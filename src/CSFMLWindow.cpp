@@ -1,6 +1,8 @@
 #include "CSFMLWindow.hpp"
+#include <imgui-SFML.h>
+#include <imgui.h>
 
-CSFMLWindow::CSFMLWindow(char * title, int width, int height) :
+CSFMLWindow::CSFMLWindow(std::string title, int width, int height) :
   m_Width(width), m_Height(height), m_Title(title), m_bClose(false)
 {
   
@@ -8,6 +10,7 @@ CSFMLWindow::CSFMLWindow(char * title, int width, int height) :
 
 CSFMLWindow::~CSFMLWindow()
 {
+  ImGui::SFML::Shutdown();
   m_window->close();
 }
 
@@ -18,17 +21,27 @@ bool CSFMLWindow::create()
 
 bool CSFMLWindow::init()
 {
+  /*
   // Request a 24-bits depth buffer when creating the window
   sf::ContextSettings contextSettings;
   contextSettings.depthBits = 24;
+  */
 
   // Create the main window
-  m_window = new sf::Window(sf::VideoMode(m_Width, m_Height), m_Title, sf::Style::Default, contextSettings);
+  //sf::VideoMode desktop = 	sf::VideoMode::getDesktopMode();
+  auto fullscreen = 	sf::VideoMode::getFullscreenModes();
+  m_window = new sf::RenderWindow(fullscreen[0], sf::String(m_Title), sf::Style::Fullscreen);
+  m_window->setVerticalSyncEnabled(true);
+  //m_window->setFramerateLimit(60);
+
+  ImGui::SFML::Init(*m_window);
+  //m_window->setMouseCursorVisible(false);
+  //m_window->
   // Make it the active window for OpenGL calls
   m_window->setActive();
-  if (!gladLoadGL())
+  if (!OpenGLLoader())
     return false;
-  glEnable(GL_DEPTH);
+  glEnable(GL_DEPTH_TEST);
   glEnable(GL_SMOOTH);
 
   return true;
@@ -36,13 +49,21 @@ bool CSFMLWindow::init()
 
 void CSFMLWindow::update()
 {
+  ImGui::SFML::Update(*m_window, deltaClock.restart());
+  ImGui::ShowTestWindow();
 
+  ImGui::Begin("Hello, world!");
+  if (ImGui::Button("Exit"))
+  {
+    m_bClose = true;
+  }
+  ImGui::End();
 }
 
 void CSFMLWindow::clear()
 {
-  glClearBufferfv(GL_COLOR, 0, m_BackColor);
-  //glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 bool CSFMLWindow::closed()
@@ -52,6 +73,8 @@ bool CSFMLWindow::closed()
 
 void CSFMLWindow::swap()
 {
+
+  ImGui::SFML::Render(*m_window);
   m_window->display();
 }
 
@@ -71,6 +94,7 @@ void *CSFMLWindow::getHandle()
 
 bool CSFMLWindow::OnInputEvent(sf::Event &event)
 {
+  ImGui::SFML::ProcessEvent(event);
   // Close window: exit
   if (event.type == sf::Event::Closed)
     m_bClose = true;
@@ -81,16 +105,19 @@ bool CSFMLWindow::OnInputEvent(sf::Event &event)
     m_window->close();
     m_bClose = true;
   }
-  if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Up))
-    ;//key_up->execute();
-  if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Down))
-    ;//key_down->execute();
-  if ((event.type == sf::Event::JoystickButtonPressed))
-    ;//key_down->execute();
-  // Resize event: adjust the viewport
   if (event.type == sf::Event::Resized)
   {
-    glViewport(0, 0, event.size.width, event.size.height);
+    glViewport(0, 0, m_Width = event.size.width, m_Height = event.size.height);
   }
   return true;
+}
+
+int CSFMLWindow::getWidth()
+{
+  return m_Width;
+}
+
+int CSFMLWindow::getHeight()
+{
+  return m_Height;
 }

@@ -1,5 +1,4 @@
 #pragma once
-//<<<<<<< HEAD
 //
 //#include <glm/gtx/quaternion.hpp>
 //#include <glm/glm.hpp>
@@ -59,7 +58,6 @@
 //  void rotate(glm::vec3 v) override;
 //  void setTarget(glm::vec3 t) override;
 //};
-// =======
 #include <InputHandler.hpp>
 #include <glm/glm.hpp>
 #define PI 3.1415926535897932384626433832795
@@ -93,4 +91,4 @@ public:
 
 
 };
-// >>>>>>> 4ee289218448351af2f3976559c841116c6211e6
+/* #include "HackCamera.hpp" */

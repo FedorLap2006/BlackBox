@@ -6,6 +6,7 @@
 #include "CShader.hpp"
 #include "Triangle.hpp"
 #include "World.hpp"
+#include "CPlayer.h"
 
 #include <common.h>
 #include <map>
@@ -17,7 +18,7 @@
 using string = std::string;
 class EventListener; 
 
-class CGame : public IGame {
+class CGame : public IGame, public IInputEventListener{
   class GameState;
   class EventListener;
 private:
@@ -25,9 +26,15 @@ private:
   IWindow *m_Window;
   IInputHandler *inputHandler;
   World *m_World;
+  CCamera *m_camera1, *m_camera2, *m_active_camera;
+  CPlayer *m_player;
+  bool isWireFrame = false;
 
-  char *m_Title;
+  std::string m_Title;
   bool m_running = true;
+  float m_deltaTime;
+  float m_lastTime;
+  sf::Clock deltaClock;
   EventListener *listener;
   class GameState; 
   class GameState;
@@ -41,7 +48,7 @@ private:
   std::stack<GameState*> states;
 
 public:
-  CGame(char *);
+  CGame(std::string title);
   ~CGame() = default;
   bool init(ISystem *pSystem);
   bool update();
@@ -49,15 +56,14 @@ public:
   void input();
 
   bool init_opbject();
-};
+  void setRenderState();
+  void render();
 
-
-class CGame::EventListener : public IInputEventListener 
-{
-  CGame *m_Game;
-  EventListener(CGame *game);
+  // IInputEventListener interface
+public:
   virtual bool OnInputEvent(sf::Event &event);
 };
+
 
 class CGame::GameState
 {

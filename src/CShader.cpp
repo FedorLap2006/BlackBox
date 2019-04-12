@@ -170,7 +170,7 @@ void CShaderProgram::setUniformValue(const char *name, glm::vec2 value)
 {
     GLint loc = glGetUniformLocation(m_Program, name);
     if (loc != -1){
-        glUniform2fv(loc, 2, glm::value_ptr(value));
+        glUniform2fv(loc, 1, glm::value_ptr(value));
     }
 }
 
@@ -178,15 +178,16 @@ void CShaderProgram::setUniformValue(const char *name, glm::vec3 value)
 {
     GLint loc = glGetUniformLocation(m_Program, name);
     if (loc != -1){
-        glUniform3fv(loc, 3, glm::value_ptr(value));
+        glUniform3fv(loc, 1, glm::value_ptr(value));
     }
+    int er = glGetError();
 }
 
 void CShaderProgram::setUniformValue(const char *name, glm::vec4 value)
 {
     GLint loc = glGetUniformLocation(m_Program, name);
     if (loc != -1){
-        glUniform4fv(loc, 4, glm::value_ptr(value));
+        glUniform4fv(loc, 1, glm::value_ptr(value));
     }
 }
 

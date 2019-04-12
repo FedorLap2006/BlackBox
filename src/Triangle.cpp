@@ -3,7 +3,6 @@
 #include "IndexBuffer.hpp"
 #include <iostream>
 
-#include <GLFW/glfw3.h>
 #include <Opengl.hpp>
 
 using namespace std;
@@ -13,17 +12,12 @@ Plane::Plane(CShaderProgram *program) :
 {
   m_type = OBJType::TPRIMITIVE;
   m_Vertices = {
-    {-0.5f, -0.5f, -0.5f},
-    {-0.5f,  0.5f, -0.5f},
-    {0.5f, -0.5f, -0.5f},
-    {0.5f, -0.5f, -0.5f},
-    {-0.5f,  0.5f, -0.5f},
-    {0.5f,  0.5f, -0.5f},
-    /*
-    {-0.5f, -0.5f, 0.0f},
-    {0.5f/2,  0.5f/2, 0.0f},
-    {0.5f, -0.5f, 0.0f}
-    */
+    {{-0.5f, -0.5f, -0.5f}},
+    {{-0.5f,  0.5f, -0.5f}},
+    {{0.5f, -0.5f, -0.5f}},
+    {{0.5f, -0.5f, -0.5f}},
+    {{-0.5f,  0.5f, -0.5f}},
+    {{0.5f,  0.5f, -0.5f}}
   };
 
   m_Indeces = {

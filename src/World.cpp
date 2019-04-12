@@ -6,13 +6,16 @@ World::World()
 
 }
 
-void World::draw() {
+void World::draw(float dt) {
   for (const auto &object : m_Objs) {
-    object.second->rotate(0.01f/3, {0,1,0});
+    object.second->rotate(dt*0.01f, {0,1,0});
     object.second->getShaderProgram()->use();
     object.second->getShaderProgram()->setUniformValue("Model", object.second->getTransform());
     object.second->getShaderProgram()->setUniformValue("View", m_Camera->getViewMatrix());
     object.second->getShaderProgram()->setUniformValue("Projection", m_Camera->getProjectionMatrix());
+    object.second->getShaderProgram()->setUniformValue("lightPos", glm::vec3(4,4,-4));
+    object.second->getShaderProgram()->setUniformValue("lightColor", glm::vec3(1,1,1.0));
+    //object.second->getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
 
     object.second->draw();
   }
@@ -29,4 +32,11 @@ void World::add(string name, Object * o) {
     m_Cams[name] = o;
   else if (o->getType() == OBJType::TPRIMITIVE)
     m_Objs[name] = o;
+}
+
+void World::update(float deltatime)
+{
+  for (const auto &object : m_Objs) {
+    object.second->update(deltatime);
+  }
 }

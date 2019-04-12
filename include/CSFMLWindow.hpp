@@ -2,8 +2,10 @@
 #include "IWindow.hpp"
 #include "InputHandler.hpp"
 #include <SFML/System.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <Opengl.hpp>
+#include <glm/glm.hpp>
+#include <imgui-SFML.h>
 
 class CSFMLWindow :
   public IWindow,
@@ -13,14 +15,15 @@ class CSFMLWindow :
   static constexpr int DEFAULT_HEIGHT = 768;
   static constexpr char *DEFAULT_TITLE = "SFML Window";
 
-  sf::Window* m_window;
+  sf::RenderWindow* m_window;
   bool m_bClose;
   int m_Width;
   int m_Height;
-  char *m_Title;
-  GLfloat m_BackColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+  std::string m_Title;
+  glm::vec4 m_BackColor = { 0.5f, 0.5f, 0.5f, 1.0f };
+  sf::Clock deltaClock;
 public:
-  CSFMLWindow(char *title = DEFAULT_TITLE, int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT);
+  CSFMLWindow(std::string = DEFAULT_TITLE, int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT);
   ~CSFMLWindow();
 
   virtual bool create() override;
@@ -39,5 +42,9 @@ public:
   // IInputEventListener interface
 public:
   virtual bool OnInputEvent(sf::Event &event) override;
+
+  // Inherited via IWindow
+  virtual int getWidth() override;
+  virtual int getHeight() override;
 };
 
