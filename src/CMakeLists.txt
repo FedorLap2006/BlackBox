@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(BlackBox CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/Cmake/modules/")
@@ -15,6 +17,10 @@ elseif(GLEW_LOADER)
 endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glm glm)
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/SFML SFML)
+if (USE_LUA)
+	add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/sol2 sol2)
+else()
+endif()
 #add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/imgui-sfml imgui-sfml)
 #add_subdirectory(imgui)
 find_package(OpenGL REQUIRED)
@@ -28,11 +34,15 @@ if (WIN32)
     message(FAILED "GDI32 notfound")
   endif()
 endif()
+
 #--------------------------------------------------
 include_directories(
   "${SFML_SOURCE_DIR}/include"
   " ${CMAKE_SOURCE_DIR}/include"
 )
+
+
+
 #--------------------------------------------------
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 #...
@@ -64,6 +74,7 @@ target_sources(
   PRIVATE ${CMAKE_SOURCE_DIR}/src/GameObject.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/Geometry.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/CCamera.cpp
+  PRIVATE ${CMAKE_SOURCE_DIR}/src/CController.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/IndexBuffer.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/MatrixTransform.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/Object.cpp
@@ -76,12 +87,14 @@ target_sources(
   PRIVATE ${CMAKE_SOURCE_DIR}/src/VertexBuffer.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/World.cpp
   PRIVATE ${CMAKE_SOURCE_DIR}/src/CPlayer.cpp
+
 )
 target_sources(${PROJECT_NAME}
   PRIVATE ${CMAKE_SOURCE_DIR}/include/CCamera.hpp
+  PRIVATE ${CMAKE_SOURCE_DIR}/include/CController.hpp
   PRIVATE ${CMAKE_SOURCE_DIR}/include/CGame.hpp
   PRIVATE ${CMAKE_SOURCE_DIR}/include/CInputHandler.hpp
-  PRIVATE ${CMAKE_SOURCE_DIR}/include/common.h
+  PRIVATE ${CMAKE_SOURCE_DIR}/include/common.H
   PRIVATE ${CMAKE_SOURCE_DIR}/include/CShader.hpp
   PRIVATE ${CMAKE_SOURCE_DIR}/include/CSystem.hpp
   PRIVATE ${CMAKE_SOURCE_DIR}/include/Cube.hpp
@@ -144,6 +157,11 @@ elseif(GLAD_LOADER)
   target_sources(${PROJECT_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/src/GladLoader.cpp
   )
+endif()
+
+if (USE_LUA)
+	target_link_libraries(${PROJECT_NAME} sol2)
+else()
 endif()
 
 if (USE_SFML)
