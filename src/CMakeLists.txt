@@ -17,14 +17,11 @@ elseif(GLEW_LOADER)
 endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glm glm)
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/SFML SFML)
-<<<<<<< HEAD
 if (USE_LUA)
 	add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/sol2 sol2)
 else()
 endif()
-=======
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/soil soil)
->>>>>>> dcafd5db2b217710292cad184ccca51ba2a4f9e6
 #add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/imgui-sfml imgui-sfml)
 #add_subdirectory(imgui)
 find_package(OpenGL REQUIRED)
