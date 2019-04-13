@@ -20,3 +20,6 @@
 	path = submodules/sol2
 	url = https://github.com/ThePhD/sol2.git
 	branch=sol3
+[submodule "submodules/soil"]
+	path = submodules/soil
+	url = git@github.com:fromasmtodisasm/soil.git
