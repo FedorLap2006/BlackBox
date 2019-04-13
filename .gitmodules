@@ -16,3 +16,7 @@
 [submodule "submodules/imgui-sfml"]
 	path = submodules/imgui-sfml
 	url = https://github.com/fromasmtodisasm/imgui-sfml
+[submodule "sol2"]
+	path = submodules/sol2
+	url = https://github.com/ThePhD/sol2.git
+	branch=sol3
