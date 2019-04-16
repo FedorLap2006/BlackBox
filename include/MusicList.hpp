@@ -45,14 +45,12 @@ MusicList::MusicList()
 
 bool MusicList::addTrack(std::string path)
 {
-	/*
   auto track = std::make_unique<sf::Music>();
   if (track->openFromFile(m_RootPath + path))
   {
     m_Playlist.push_back(std::move(track));
     return true;
   }
-	*/
   return false;
 }
 
