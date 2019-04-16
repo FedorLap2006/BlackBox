@@ -34,7 +34,7 @@ include_directories(
   " ${CMAKE_SOURCE_DIR}/include"
 )
 #--------------------------------------------------
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+#find_package(Boost COMPONENTS system filesystem REQUIRED)
 #...
 #--------------------------------------------------
 ###################################################
@@ -163,10 +163,11 @@ target_link_libraries(${PROJECT_NAME} glm)
 target_link_libraries(${PROJECT_NAME} ImGui)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-)
+
+#target_link_libraries(${PROJECT_NAME}
+#  ${Boost_FILESYSTEM_LIBRARY}
+#  ${Boost_SYSTEM_LIBRARY}
+#)
 
 add_test(NAME mytest COMMAND ${PROJECT_NAME}_test WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
