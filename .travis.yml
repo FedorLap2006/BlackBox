@@ -1,0 +1,20 @@
+language: cpp
+compiler: gcc g++
+sudo: true
+# install:
+#  - libxrandr
+#  - libwrandr
+os: windows
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      libxrandr2
+      #libwrandr-dev
+    
+script:
+  - mkdir build
+  - cd build
+  - cmake -DBUILD_SHARED_LIBS=OFF -DGLM_TEST_ENABLE=OFF -DGLAD_INSTALL=OFF -DGLAD_LOADER=ON -DUSE_SFML=ON .. 
+  - make -j
