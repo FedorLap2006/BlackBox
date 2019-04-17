@@ -120,6 +120,10 @@ target_sources(${PROJECT_NAME}
   PRIVATE ${CMAKE_SOURCE_DIR}/include/World.hpp
 )
 #--------------------------------------------------
+if (UNIX)
+	set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")	
+endif()
+#--------------------------------------------------
 #IMGUI
 add_library(ImGui STATIC)
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/submodules/imgui)
