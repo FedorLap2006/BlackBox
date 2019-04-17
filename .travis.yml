@@ -15,7 +15,7 @@ addons:
       - libudev-dev
       - libflac-dev
       - libvorbis-dev
-      - libogg
+      - libogg-dev
 env:
   - TRAVIS_BUILD_GPG_KEYS_URL=gpg_keys.json
     
