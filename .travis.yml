@@ -12,6 +12,7 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
+      - libxrandr-dev
       - libopenal-dev
       - libudev-dev
       - libflac-dev
