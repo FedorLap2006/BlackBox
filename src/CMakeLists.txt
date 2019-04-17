@@ -120,8 +120,8 @@ target_sources(${PROJECT_NAME}
   PRIVATE ${CMAKE_SOURCE_DIR}/include/World.hpp
 )
 #--------------------------------------------------
-if (UNIX)
-	set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")	
+if (LINUX OR UNIX OR APPLE)
+	target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
 endif()
 #--------------------------------------------------
 #IMGUI
