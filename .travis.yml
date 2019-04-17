@@ -11,7 +11,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       libxrandr2
-      #libwrandr-dev
+      libwrandr-dev
+      libudev-dev
     
 script:
   - mkdir build
