@@ -1,4 +1,4 @@
-language: cpp
+language: generic 
 before_install:
   - sudo apt-get update -q
 #compiler: gcc g++
@@ -7,6 +7,9 @@ sudo: true
 #  - libxrandr
 #  - libwrandr
 os: linux 
+env: 
+  - COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+  - TRAVIS_BUILD_GPG_KEYS_URL=gpg_keys.json
 addons:
   apt:
     sources:
@@ -18,9 +21,10 @@ addons:
       - libflac-dev
       - libvorbis-dev
       - libogg-dev
-env:
-  - TRAVIS_BUILD_GPG_KEYS_URL=gpg_keys.json
-    
+      - g++-7
+    sources: &sources
+      - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
 script:
   - mkdir build
   - cd build
