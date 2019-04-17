@@ -121,7 +121,7 @@ target_sources(${PROJECT_NAME}
 )
 #--------------------------------------------------
 if (LINUX OR UNIX OR APPLE)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
+	target_link_libraries(BlackBox ${CMAKE_DL_LIBS})
 endif()
 #--------------------------------------------------
 #IMGUI
