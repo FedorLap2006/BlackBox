@@ -13,6 +13,8 @@ addons:
       libxrandr2
       libwrandr-dev
       libudev-dev
+env:
+  - TRAVIS_BUILD_GPG_KEYS_URL=gpg_keys.json
     
 script:
   - mkdir build
