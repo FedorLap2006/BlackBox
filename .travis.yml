@@ -12,6 +12,7 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
+      - libopenal-dev
       - libudev-dev
       - libflac-dev
       - libvorbis-dev
