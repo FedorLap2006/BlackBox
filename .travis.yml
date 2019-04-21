@@ -9,7 +9,6 @@ sudo: true
 os: linux 
 env: 
   - COMPILER_NAME=gcc CXX=g++-7 CC=gcc-7
-  - TRAVIS_BUILD_GPG_KEYS_URL=gpg_keys.json
 addons:
   apt:
     sources:
