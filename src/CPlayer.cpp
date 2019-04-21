@@ -1,17 +1,41 @@
-#include "CPlayer.h"
-#include "Primitives.hpp"
+#include <BlackBox/CPlayer.h>
+#include <BlackBox/Primitives.hpp>
 
-CPlayer::CPlayer() : GameObject(*Primitive::create(Primitive::CUBE, "vertex.glsl", "fragment.glsl"))
+CPlayer::CPlayer() : GameObject(*Object::load("pengium.obj"))
 {
   m_type = OBJType::TPRIMITIVE;
-  getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
+  //getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
   move({0,0,0});
 }
 
 bool CPlayer::OnInputEvent(sf::Event &event)
 {
-  GameObject::OnInputEvent(event);
-  return true;
+  switch (event.type) {
+  case sf::Event::MouseWheelScrolled:
+    if (event.mouseWheelScroll.delta > 0)
+    {
+      m_Camera->moveForward(SCROLL_SPEED);
+    }
+    else {
+      m_Camera->moveBackward(SCROLL_SPEED);
+    }
+    switch(event.mouseWheelScroll.wheel){
+    case sf::Mouse::VerticalWheel:
+    case sf::Mouse::HorizontalWheel:
+      m_Camera->rotateX(p_gIGame->getInputHandler()->getDeltaMouse().y);
+      m_Camera->rotateX(p_gIGame->getInputHandler()->getDeltaMouse().x);
+    }
+    return true;
+  case sf::Event::MouseMoved:
+	{
+		sf::Vector2i delta = p_gIGame->getInputHandler()->getDeltaMouse();
+		m_Camera->rotateX(-delta.y*MOUSE_SENSIVITY);
+		m_Camera->rotateY(delta.x*MOUSE_SENSIVITY);
+		return true;
+	}
+  default:
+    return GameObject::OnInputEvent(event);
+  }
 }
 
 void CPlayer::draw()

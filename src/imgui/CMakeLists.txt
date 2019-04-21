@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 project(ImGUI CXX)
 
+set(CMAKE_CXX_STANDARD 11)
+set_property(TARGET ${PROJECT_NAME}  PROPERTY CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/submodules/imgui)
 set(IMGUI-SFML_DIR ${CMAKE_SOURCE_DIR}/submodules/imgui-sfml)
 
@@ -8,6 +12,7 @@ include_directories(
   ${PROJECT_NAME} PUBLIC ${IMGUI_DIR}
 )
 add_library(${PROJECT_NAME})
+set_property(TARGET ${PROJECT_NAME}  PROPERTY CXX_STANDARD 11)
 target_sources(
   ${PROJECT_NAME}
   PRIVATE ${IMGUI_DIR}/imgui.cpp

@@ -1,12 +1,13 @@
-#include "Object.hpp"
-#include "ObjLoader.hpp"
-#include "VertexBuffer.hpp"
+#include <BlackBox/Object.hpp>
+#include <BlackBox/ObjLoader.hpp>
+#include <BlackBox/VertexBuffer.hpp>
+#include <BlackBox/Opengl.hpp>
+
 #include <fstream>
 #include <iostream>
 #include <cctype>
 #include <cstdio>
 #include <sstream>
-#include <Opengl.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -86,9 +87,9 @@ void Object::moveTo(glm::vec3 v)
 }
 
 void Object::rotate(float angle, glm::vec3 v) {
-  m_transform.rotation.x = angle;
-  m_transform.rotation.y = angle;
-  m_transform.rotation.z = angle;
+  m_transform.rotation.x += angle;
+  m_transform.rotation.y += angle;
+  m_transform.rotation.z += angle;
 }
 
 void Object::scale(glm::vec3 v)
@@ -104,7 +105,7 @@ Object * Object::load(string path)
   CShaderProgram *shader;
   std::vector<Vertex> p;
 
-  if (!loadOBJ(("res/" + path).c_str(), p))
+  if (!loadOBJ(("res/geom/" + path).c_str(), p))
     return nullptr;
   
   vb = new VertexBuffer(p.data(), static_cast<GLint>(p.size()));
