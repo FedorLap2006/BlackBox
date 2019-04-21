@@ -6,6 +6,9 @@ struct IGame;
 struct IShaderManager;
 struct IRender;
 
+/**
+ * @brief The IEngine struct
+ */
 struct IEngine
 {
   virtual void Init() = 0;
@@ -16,7 +19,10 @@ struct IEngine
   virtual IRender *getIRender() = 0;
 };
 
-// Get the system interface (must be defined locally in each module)
+/**
+ * @brief GetIEngine Get the system interface (must be defined locally in each module)
+ * @return
+ */
 extern IEngine *GetIEngine();
 
 // interface of the DLL
