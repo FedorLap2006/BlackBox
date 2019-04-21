@@ -1,8 +1,12 @@
-#include "CGame.hpp"
-#include "GameObject.hpp"
-#include "CWindow.hpp"
-#include "Triangle.hpp"
-#include "Texture.hpp"
+#include <BlackBox/CGame.hpp>
+#include <BlackBox/GameObject.hpp>
+#include <BlackBox/CWindow.hpp>
+#include <BlackBox/Triangle.hpp>
+#include <BlackBox/Texture.hpp>
+
+#include <imgui-SFML.h>
+#include <imgui.h>
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,8 +14,6 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <ctime>
 
-#include <imgui-SFML.h>
-#include <imgui.h>
 #include <sstream>
 
 using namespace std;
@@ -20,8 +22,8 @@ IGame *p_gIGame;
 
 //////////////////////////////////////////////////////////////////////
 // Pointer to Global ISystem.
-static ISystem* gISystem = nullptr;
-ISystem* GetISystem()
+static IEngine* gISystem = nullptr;
+IEngine* GetIEngine()
 {
   return gISystem;
 }
@@ -37,10 +39,11 @@ CGame::CGame(std::string title) :
   m_PlayList.addTrack("japan.ogg");
 }
 
-bool CGame::init(ISystem *pSystem)  {
+bool CGame::init(IEngine *pSystem)  {
   m_pSystem = pSystem;
-  p_gIGame = this;
+  p_gIGame = reinterpret_cast<IGame*>(this);
   m_Window = new CWindow(m_Title); 
+	m_Window->setFlags(CWindow::DRAW_GUI);
   if (m_Window != nullptr ) {
     if (!m_Window->init() || !m_Window->create())
       return false;
@@ -62,6 +65,7 @@ bool CGame::init(ISystem *pSystem)  {
     glm::normalize(player_pos - pos),
     glm::vec3(0,1,0)
   );
+	camControl = new CameraController(m_camera1);
   m_camera1->setView(0,0,m_Window->getWidth(),m_Window->getHeight());
   m_camera2 = new CCamera();
   m_player->attachCamera(m_camera1);
@@ -77,25 +81,22 @@ bool CGame::init(ISystem *pSystem)  {
 
 bool CGame::update() {
   sf::Time deltaTime = deltaClock.restart();
-  while (!m_Window->closed()) {
+  while (!m_Window->closed() &&  m_running) {
     m_deltaTime = deltaTime.asMicroseconds()*0.001;
     input();
     m_Window->update();
-    //guiControls();
-    m_World->update(m_deltaTime);
+		if (!m_isPaused)
+		{
+			gotoGame();
+			m_World->update(m_deltaTime);
+			setRenderState();
+		}
+		else gotoMenu();
 
-    static float prev_time;
-    static std::stringstream ss;
-    prev_time += m_deltaTime;
-    glm::vec3 pos = m_active_camera->m_pos;
-    if (prev_time >= 1.0)
-      ss << "cam.x = " << pos.x <<endl <<
-           "cam.y = " << pos.y <<endl <<
-           "cam.z = " << pos.z << endl;
-    m_Window->setTitle(ss.str().c_str());
-    ss.str("");
-    setRenderState();
     render();
+		if (m_isPaused)
+			guiControls();
+		m_Window->swap();
   }
 	return true;
 }
@@ -106,6 +107,7 @@ bool CGame::run() {
   m_PlayList.setVolume(10.f);
   m_PlayList.play();
   m_isMusicPlaying = true;
+	gotoGame();
   update();
   return true;
 }
@@ -222,17 +224,18 @@ void CGame::render()
   m_World->setCamera(m_camera2);
   m_World->draw(m_deltaTime);
   */
-  m_Window->swap();
+  //m_Window->swap();
 }
 
 
 void CGame::guiControls()
 {
-	static bool show_player=1, show_camera=1;
-
+	static bool show_player=1, show_camera=1, show_demo=0;
+	
 	ImGui::Begin("Control panel");
 		ImGui::Checkbox("Show Plyer", &show_player);
 		ImGui::Checkbox("Show Camera", &show_camera);
+		ImGui::Checkbox("Show Demo", &show_demo);
 	ImGui::End();
 	if (show_player) {
 		ImGui::Begin("Music Player");
@@ -266,6 +269,14 @@ void CGame::guiControls()
 				m_active_camera->reset();	
 			}
 		ImGui::End();
+	}
+	if (show_demo)
+	{
+		ImGui::ShowDemoWindow();
+	}
+	if (ImGui::Button("Exit"))
+	{
+		m_running = false;	
 	}
 }
 
@@ -318,6 +329,9 @@ bool CGame::OnInputEvent(sf::Event &event)
         }
         m_isMusicPlaying = !m_isMusicPlaying;
         return true;
+      case sf::Keyboard::Backspace:
+				m_isPaused = !m_isPaused;
+        return true;
       }
     }
   }
@@ -327,4 +341,22 @@ bool CGame::OnInputEvent(sf::Event &event)
 IInputHandler *CGame::getInputHandler()
 {
   return m_inputHandler;
+}
+
+void CGame::gotoGame()
+{
+	if (!m_InGame)
+	{
+		m_InGame = true;
+		reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(false);
+	}
+}
+
+void CGame::gotoMenu()
+{
+	if (m_InGame)
+	{
+		m_InGame = false;
+		reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(true);
+	}
 }

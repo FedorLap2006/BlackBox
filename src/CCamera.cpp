@@ -1,6 +1,8 @@
-#include <CCamera.hpp>
-#include <Opengl.hpp>
+#include <BlackBox/CCamera.hpp>
+#include <BlackBox/Opengl.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp> 
 #include <iostream>
 #include <sstream>
 using namespace  std;

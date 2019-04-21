@@ -1,5 +1,5 @@
-#include "CPlayer.h"
-#include "Primitives.hpp"
+#include <BlackBox/CPlayer.h>
+#include <BlackBox/Primitives.hpp>
 
 CPlayer::CPlayer() : GameObject(*Object::load("pengium.obj"))
 {
@@ -27,9 +27,12 @@ bool CPlayer::OnInputEvent(sf::Event &event)
     }
     return true;
   case sf::Event::MouseMoved:
-      m_Camera->rotateX(p_gIGame->getInputHandler()->getDeltaMouse().y*MOUSE_SPEED);
-      m_Camera->rotateY(-p_gIGame->getInputHandler()->getDeltaMouse().x*MOUSE_SPEED);
-      return true;
+	{
+		sf::Vector2i delta = p_gIGame->getInputHandler()->getDeltaMouse();
+		m_Camera->rotateX(-delta.y*MOUSE_SENSIVITY);
+		m_Camera->rotateY(delta.x*MOUSE_SENSIVITY);
+		return true;
+	}
   default:
     return GameObject::OnInputEvent(event);
   }
