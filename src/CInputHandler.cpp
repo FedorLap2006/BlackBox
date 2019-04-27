@@ -17,22 +17,21 @@ ICommand * CInputHandler::handleInput()
   {
     if (event.type == sf::Event::MouseMoved)
     {
-			
-
       Mouse.prev_pos = Mouse.curr_pos;
       Mouse.curr_pos = sf::Vector2i(event.mouseMove.x,event.mouseMove.y);
     }
     for (const auto &listener : listeners)
     {
-      listener->OnInputEvent(event);
+        if (listener->OnInputEvent(event))
+          break;
     }
   }
   return nullptr;
 }
 
-void CInputHandler::AddEventListener(IInputEventListener * pListener)
+void CInputHandler::PushEventListener(IInputEventListener * pListener)
 {
-  listeners.push_back(pListener);
+  listeners.push_front(pListener);
 }
 
 sf::Vector2i CInputHandler::getDeltaMouse()
@@ -40,7 +39,18 @@ sf::Vector2i CInputHandler::getDeltaMouse()
 	sf::Vector2i windowCenter(m_Window->getSize() / 2u);
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(*m_Window);
 	sf::Vector2i delta = windowCenter - mousePosition;
-	sf::Mouse::setPosition(windowCenter, *m_Window);	
+  if (Mouse.keeped)
+    sf::Mouse::setPosition(windowCenter, *m_Window);
 
-	return delta;
+  return delta;
+}
+
+void CInputHandler::keepMouseInCenter(bool keep)
+{
+  Mouse.keeped = keep;
+}
+
+void CInputHandler::PopEventListener()
+{
+  listeners.pop_front();
 }

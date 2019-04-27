@@ -7,6 +7,7 @@ uniform vec3 LightPosition;
 uniform vec3 Kd;
 uniform vec3 Ld;
 uniform vec3 color;
+
 out vec3 FragPos;
 out vec2 TextCoord;
 out vec3 Normal;
@@ -21,6 +22,6 @@ void main()
 {
     gl_Position = Projection * View * Model * vec4(Position, 1.0f);
     FragPos = vec3(Model * vec4(Position, 1.0f));
-    Normal = VertexNormal;
+    Normal = normalize(VertexNormal);
     TextCoord = UV;
 }

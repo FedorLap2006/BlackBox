@@ -5,19 +5,18 @@
 #include <string>
 
 
-bool loadOBJ(const char * path, std::vector <Vertex> & out_vertices)
+bool loadOBJ(const char * path, std::vector <Vertex> & out_vertices, std::vector<GLuint> &out_indeces)
 {
   std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
   std::vector< glm::vec3 > temp_vertices;
   std::vector< glm::vec2 > temp_uvs;
   std::vector< glm::vec3 > temp_normals;
   bool has_uv = false;
-  int f_cnt = 0;
-  int v_cnt = 0;
   unsigned int current_face = 0;
+  bool first_fase = true;
 
   FILE * file = fopen(path, "r");
-  if (file == NULL) {
+  if (file == nullptr) {
     printf("Impossible to open the file !\n");
     return false;
   }
@@ -47,6 +46,11 @@ bool loadOBJ(const char * path, std::vector <Vertex> & out_vertices)
       temp_normals.push_back(normal);
     }
     else if (strcmp(lineHeader, "f") == 0) {
+      if (first_fase)
+      {
+        out_vertices.resize(temp_vertices.size());
+        first_fase = false;
+      }
       std::string vertex1, vertex2, vertex3;
       unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
       int cnt = 6;
@@ -87,25 +91,27 @@ bool loadOBJ(const char * path, std::vector <Vertex> & out_vertices)
       normalIndices.push_back(normalIndex[2]);
 
       // For each vertex of each triangle
-      Vertex _vertex;
+      Vertex vertex;
+
       //for (unsigned int i = 0; i < vertexIndices.size(); i++) {
       for (; current_face < vertexIndices.size(); current_face++) {
-        unsigned int vertexIndex = vertexIndices[current_face];
-        unsigned int normalIndex = normalIndices[current_face];
+        unsigned int vertexIndex = vertexIndices[current_face] - 1;
+        unsigned int normalIndex = normalIndices[current_face] - 1;
 
-        glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-        _vertex.pos = vertex;
+        glm::vec3 pos = temp_vertices[vertexIndex];
+        vertex.pos = pos;
 
         if (has_uv)
         {
-          unsigned int uvIndex = uvIndices[current_face];
-          glm::vec2 uv = temp_uvs[uvIndex - 1];
-          _vertex.uv = uv;
+          unsigned int uvIndex = uvIndices[current_face] - 1;
+          glm::vec2 uv = temp_uvs[uvIndex];
+          vertex.uv = uv;
         }
 
-        glm::vec3 normal = temp_normals[normalIndex - 1];
-        _vertex.n = normal;
-        out_vertices.push_back(_vertex);
+        glm::vec3 normal = temp_normals[normalIndex];
+        vertex.n = normal;
+        out_vertices[vertexIndex] = vertex;
+        out_indeces.push_back((vertexIndex));
       }
     }
     else {

@@ -5,18 +5,21 @@
 struct IGame;
 struct IShaderManager;
 struct IRender;
+struct IInputHandler;
 
 /**
  * @brief The IEngine struct
  */
 struct IEngine
 {
-  virtual void Init() = 0;
+  virtual bool Init() = 0;
   virtual void Start() = 0;
   virtual void Release() = 0;
+  virtual void Update() = 0;
 
   virtual IShaderManager *getShaderManager() = 0;
   virtual IRender *getIRender() = 0;
+  virtual IInputHandler *getIInputHandler() = 0;
 };
 
 /**

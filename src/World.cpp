@@ -3,7 +3,17 @@
 
 World::World()
 {
+  m_Light = new Light();
+  m_Light->pos = glm::vec3(0,7,0);
+  m_Light->color = glm::vec3(1,1,0);
+}
 
+World::~World()
+{
+  for(auto const &obj : m_Objs)
+  {
+    delete obj.second;
+  }
 }
 
 void World::draw(float dt) {
@@ -13,8 +23,8 @@ void World::draw(float dt) {
     object.second->getShaderProgram()->setUniformValue("Model", object.second->getTransform());
     object.second->getShaderProgram()->setUniformValue("View", m_Camera->getViewMatrix());
     object.second->getShaderProgram()->setUniformValue("Projection", m_Camera->getProjectionMatrix());
-    object.second->getShaderProgram()->setUniformValue("lightPos", glm::vec3(4,4,-4));
-    object.second->getShaderProgram()->setUniformValue("lightColor", glm::vec3(1,1,1.0));
+    object.second->getShaderProgram()->setUniformValue("lightPos", m_Light->pos);
+    object.second->getShaderProgram()->setUniformValue("lightColor", m_Light->color);
     //object.second->getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
 
     object.second->draw();
@@ -39,4 +49,9 @@ void World::update(float deltatime)
   for (const auto &object : m_Objs) {
     object.second->update(deltatime);
   }
+}
+
+std::map<std::string, Object *> &World::getObjects()
+{
+  return m_Objs;
 }

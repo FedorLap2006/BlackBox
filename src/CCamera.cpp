@@ -26,16 +26,6 @@ CCamera::~CCamera()
 
 void CCamera::update(float deltatime)
 {
-  /*
-  static float prev_time;
-  static stringstream ss;
-  prev_time += deltatime;
-  if (prev_time >= 1.0)
-    cout << "cam.x = " << m_pos.x <<endl <<
-         "cam.y = " << m_pos.y <<endl <<
-         "cam.z = " << m_pos.z << endl;
-  */
-
 
 }
 

@@ -1,6 +1,7 @@
 #include <BlackBox/Object.hpp>
 #include <BlackBox/ObjLoader.hpp>
-#include <BlackBox/VertexBuffer.hpp>
+#include <BlackBox/CVertexBuffer.hpp>
+#include <BlackBox/CIndexBuffer.hpp>
 #include <BlackBox/Opengl.hpp>
 
 #include <fstream>
@@ -15,6 +16,7 @@ using namespace std;
 
 Object::Object() : m_transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f))
 {
+  m_material = new Material();
 }
 
 Object::Object(const Object & obj):
@@ -22,6 +24,7 @@ Object::Object(const Object & obj):
   m_Mesh(obj.m_Mesh), m_Shader(obj.m_Shader),
   m_type(obj.m_type)
 {
+  m_material = new Material();
 }
 
 
@@ -32,13 +35,11 @@ void Object::parse(std::string filename, std::vector<Vertex> &vs, CShaderProgram
 }
 
 void Object::draw() {
-  if (m_texture != nullptr)
+  if (m_material->texture != nullptr)
   {
-    int id = m_texture->id;
-    glBindTexture(GL_TEXTURE_2D, m_texture->id);
+    glBindTexture(GL_TEXTURE_2D, m_material->texture->id);
   }
-  VertexBuffer *vb = m_Mesh->getVertexBuffer();
-  vb->draw();
+  m_Mesh->draw();
 }
 
 void Object::setType(OBJType type)
@@ -74,7 +75,7 @@ void Object::update(float deltatime)
 
 void Object::setTexture(Texture *texture)
 {
-  m_texture = texture;
+  m_material->texture = texture;
 }
 
 void Object::move(glm::vec3 v) {
@@ -101,18 +102,18 @@ Object * Object::load(string path)
 {
   Object *obj = nullptr;
   Mesh *mesh;
-  VertexBuffer *vb;
-  CShaderProgram *shader;
+  CVertexBuffer *vb;
+  CIndexBuffer *ib;
   std::vector<Vertex> p;
+  std::vector<GLuint> i;
 
-  if (!loadOBJ(("res/geom/" + path).c_str(), p))
+  if (!loadOBJ(("res/geom/" + path).c_str(), p, i))
     return nullptr;
   
-  vb = new VertexBuffer(p.data(), static_cast<GLint>(p.size()));
-  mesh = new Mesh(vb, nullptr);
+  vb = new CVertexBuffer(p.data(), static_cast<GLint>(p.size()));
+  ib = new CIndexBuffer(i.data(), static_cast<GLint>(i.size()));
+  mesh = new Mesh(vb, ib);
   obj = new Object();
   obj->m_Mesh = mesh;
-  //obj->m_Shader = shader;
-  //obj->m_Shader->create();
 	return obj;
 }

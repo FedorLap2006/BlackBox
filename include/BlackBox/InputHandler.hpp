@@ -10,7 +10,9 @@ struct IInputEventListener
 struct IInputHandler
 {
   virtual ICommand *handleInput() = 0;
-  virtual void AddEventListener(IInputEventListener *pListener) = 0;
+  virtual void PushEventListener(IInputEventListener *pListener) = 0;
+  virtual void PopEventListener() = 0;
 
   virtual sf::Vector2i getDeltaMouse() = 0;
+  virtual void keepMouseInCenter(bool keep) = 0;
 };
