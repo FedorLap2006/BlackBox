@@ -12,9 +12,14 @@
 #include <unistd.h>
 #endif
 
-GUI::GUI()
+GUI::GUI() : m_OpenFileDialog()
 {
-
+  m_Game = nullptr;
+  show_player = true;
+  show_camera = true;
+  show_demo = false;
+  Info = false;
+  m_MainMenu = nullptr;
 }
 
 GUI::GUI(CGame *game) : m_Game(game)
@@ -243,6 +248,7 @@ bool GUI::OpenFileDialog(char *cwd, std::string &file)
 bool GUI::OnInputEvent(sf::Event &event)
 {
   ImGui::SFML::ProcessEvent(event);
+  return false;
 }
 
 MainMenuBar::MainMenuBar()
@@ -257,6 +263,7 @@ bool MainMenuBar::Draw()
     if(item->Draw())
       break;
   }
+  return false;
 }
 
 
@@ -268,7 +275,7 @@ FileMenu::FileMenu(std::string name)
 
 bool FileMenu::Draw()
 {
-
+  return false;
 }
 
 
@@ -279,7 +286,7 @@ EditMenu::EditMenu(std::string name)
 
 bool EditMenu::Draw()
 {
-
+  return false;
 }
 
 

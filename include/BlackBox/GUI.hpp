@@ -25,20 +25,23 @@ public:
   virtual bool Draw() = 0;
 };
 
-struct openFileDialog{
+struct openFileDialog {
   DIR *Dir;
   dirent *entry;
   std::string file;
+  openFileDialog() : Dir(nullptr), entry(nullptr), file("")
+  {
+  }
 };
 class GUI : public IInputEventListener
 {
 private:
-  CGame *m_Game;
+  CGame *m_Game = nullptr;
   bool show_player = true;
   bool show_camera = true;
   bool show_demo = false;
   bool Info = false;
-  MainMenuBar *m_MainMenu;
+  MainMenuBar *m_MainMenu = nullptr;
   openFileDialog m_OpenFileDialog;
 public:
   GUI();
