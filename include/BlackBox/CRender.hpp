@@ -16,6 +16,7 @@ private:
   IWindow *m_Window;
   IEngine *m_Engine;
   ViewPort m_viewPort;
+  CCamera *m_Camera;
 
   glm::vec4 m_BackColor = { 0.5f, 0.5f, 0.5f, 1.0f };
 

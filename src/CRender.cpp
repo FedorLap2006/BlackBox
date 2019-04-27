@@ -23,7 +23,7 @@ IWindow *CGLRender::Init(glm::vec2 pos, glm::vec2 size, unsigned int cbpp, int z
 
 bool CGLRender::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen)
 {
-
+  return false;
 }
 
 void CGLRender::BeginFrame()
@@ -65,7 +65,7 @@ void CGLRender::DrawTriStrip(CVertexBuffer *src, int vert_num)
 
 CVertexBuffer *CGLRender::CreateBuffer(int vertexcount, int vertexformat, const char *szSource, bool bDynamic)
 {
-
+  return nullptr;
 }
 
 void CGLRender::ReleaseBuffer(CVertexBuffer *bufptr)
@@ -105,7 +105,7 @@ void CGLRender::SetCamera(const CCamera &cam)
 
 const CCamera &CGLRender::GetCamera()
 {
-
+  return *m_Camera;
 }
 
 void CGLRender::ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
@@ -133,17 +133,17 @@ void CGLRender::Draw2dImage(float xpos, float ypos, float w, float h, int textur
 
 int CGLRender::SetPolygonMode(int mode)
 {
-
+  return 0;
 }
 
 int CGLRender::GetWidth()
 {
-  m_Window->getWidth();
+  return m_Window->getWidth();
 }
 
 int CGLRender::GetHeight()
 {
-  m_Window->getHeight();
+  return m_Window->getHeight();
 }
 
 void CGLRender::ScreenShot(const char *filename)
@@ -158,12 +158,12 @@ void CGLRender::ProjectToScreen(float ptx, float pty, float ptz, float *sx, floa
 
 int CGLRender::UnProject(float sx, float sy, float sz, float *px, float *py, float *pz, const float modelMatrix[], const float projMatrix[], const int viewport[])
 {
-
+  return 0;
 }
 
 int CGLRender::UnProjectFromScreen(float sx, float sy, float sz, float *px, float *py, float *pz)
 {
-
+  return 0;
 }
 
 void CGLRender::GetModelViewMatrix(float *mat)
@@ -188,7 +188,7 @@ void CGLRender::GetProjectionMatrix(float *mat)
 
 glm::vec3 CGLRender::GetUnProject(const glm::vec3 &WindowCoords, const CCamera &cam)
 {
-
+  return glm::vec3();
 }
 
 void CGLRender::RenderToViewport(const CCamera &cam, float x, float y, float width, float height)
