@@ -16,10 +16,10 @@
 [submodule "submodules/imgui-sfml"]
 	path = submodules/imgui-sfml
 	url = https://github.com/fromasmtodisasm/imgui-sfml
-[submodule "sol2"]
+[submodule "submodules/sol2"]
 	path = submodules/sol2
 	url = https://github.com/ThePhD/sol2.git
-	branch=sol3
+#	branch=sol3
 [submodule "submodules/soil"]
 	path = submodules/soil
 	url = git@github.com:fromasmtodisasm/soil.git
