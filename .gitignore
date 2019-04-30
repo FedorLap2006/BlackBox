@@ -7,3 +7,5 @@ build/*
 *.lnk
 CMakeLists.txt.user*
 /CMakeSettings.json
+res/tmp/*
+compile_commands.json

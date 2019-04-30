@@ -1,20 +1,30 @@
-#include "World.hpp"
+#include <BlackBox/World.hpp>
 
 
 World::World()
 {
+  m_Light = new Light();
+  m_Light->pos = glm::vec3(0,7,0);
+  m_Light->color = glm::vec3(1,1,0);
+}
 
+World::~World()
+{
+  for(auto const &obj : m_Objs)
+  {
+    delete obj.second;
+  }
 }
 
 void World::draw(float dt) {
   for (const auto &object : m_Objs) {
-    object.second->rotate(dt*0.01f, {0,1,0});
+    //object.second->rotate(dt*0.01f, {0,1,0});
     object.second->getShaderProgram()->use();
     object.second->getShaderProgram()->setUniformValue("Model", object.second->getTransform());
     object.second->getShaderProgram()->setUniformValue("View", m_Camera->getViewMatrix());
     object.second->getShaderProgram()->setUniformValue("Projection", m_Camera->getProjectionMatrix());
-    object.second->getShaderProgram()->setUniformValue("lightPos", glm::vec3(4,4,-4));
-    object.second->getShaderProgram()->setUniformValue("lightColor", glm::vec3(1,1,1.0));
+    object.second->getShaderProgram()->setUniformValue("lightPos", m_Light->pos);
+    object.second->getShaderProgram()->setUniformValue("lightColor", m_Light->color);
     //object.second->getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
 >>>>>>> 419c8753c15be947c0d89c399f321b939110b965
 
@@ -23,7 +33,7 @@ void World::draw(float dt) {
   // Camera ...
 }
 
-void World::setCamera(ICamera *camera)
+void World::setCamera(CCamera *camera)
 {
   m_Camera = camera;
 }
@@ -37,5 +47,12 @@ void World::add(string name, Object * o) {
 
 void World::update(float deltatime)
 {
-  //m_Camera->update(deltatime);
+  for (const auto &object : m_Objs) {
+    object.second->update(deltatime);
+  }
+}
+
+std::map<std::string, Object *> &World::getObjects()
+{
+  return m_Objs;
 }

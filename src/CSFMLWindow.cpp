@@ -1,6 +1,11 @@
-#include "CSFMLWindow.hpp"
+#include <BlackBox/CSFMLWindow.hpp>
+#include <imgui-SFML.h>
+#include <imgui.h>
+#include <SFML/System/Vector2.hpp>
+#include <iostream>
+using namespace std;
 
-CSFMLWindow::CSFMLWindow(char * title, int width, int height) :
+CSFMLWindow::CSFMLWindow(std::string title, int width, int height) :
   m_Width(width), m_Height(height), m_Title(title), m_bClose(false)
 {
   
@@ -8,44 +13,55 @@ CSFMLWindow::CSFMLWindow(char * title, int width, int height) :
 
 CSFMLWindow::~CSFMLWindow()
 {
+  ImGui::SFML::Shutdown();
   m_window->close();
 }
 
-bool CSFMLWindow::create()
+bool CSFMLWindow::init(unsigned int width, unsigned int height, unsigned int cbpp, unsigned int zbpp, unsigned int sbits, bool fullscreen)
 {
-  return true;
-}
+  sf::ContextSettings settings;
+  settings.depthBits = zbpp;
+  settings.stencilBits = sbits;
+  settings.antialiasingLevel = 4;
+  settings.majorVersion = 3;
+  settings.minorVersion = 3;
 
-bool CSFMLWindow::init()
-{
-  // Request a 24-bits depth buffer when creating the window
-  sf::ContextSettings contextSettings;
-  contextSettings.depthBits = 24;
-
+  sf::Uint32 style;
   // Create the main window
-  m_window = new sf::Window(sf::VideoMode(m_Width, m_Height), m_Title, sf::Style::Default, contextSettings);
-  
-  m_window->setMouseCursorVisible(false);
-  //m_window->
+  if (fullscreen)
+    style = sf::Style::Fullscreen;
+    //mode =  sf::VideoMode::getFullscreenModes()[0];
+  else {
+    style = sf::Style::Default;
+    //mode = sf::VideoMode::getDesktopMode();
+  }
+  m_window = new sf::RenderWindow(sf::VideoMode(width, height), DEFAULT_TITLE, style, settings);//, sf::Style::Fullscreen);
+  m_window->setVerticalSyncEnabled(true);
+  m_window->setFramerateLimit(60);
+	m_window->setMouseCursorGrabbed(true);
   // Make it the active window for OpenGL calls
   m_window->setActive();
+
+  ImGui::SFML::Init(*m_window);
+
   if (!OpenGLLoader())
     return false;
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_SMOOTH);
+  glInit();
 
   return true;
 }
 
 void CSFMLWindow::update()
 {
-
+  //ImGui::SFML::Update(*m_window, deltaClock.restart());
 }
 
 void CSFMLWindow::clear()
 {
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  float depth = 1.0f;
+  glClearBufferfv(GL_COLOR, 0, &m_BackColor[0]);
+  glClearBufferfv(GL_DEPTH, 0, &depth);
+  //glClearBufferfv(GL_DEPTH, 0 );
 }
 
 bool CSFMLWindow::closed()
@@ -55,40 +71,24 @@ bool CSFMLWindow::closed()
 
 void CSFMLWindow::swap()
 {
+
+  //ImGui::SFML::Render(*m_window);
   m_window->display();
 }
 
-void CSFMLWindow::setTitle(char *title)
+void CSFMLWindow::setTitle(const char *title)
 {
   m_window->setTitle(title);
 }
 
-void CSFMLWindow::show()
+void CSFMLWindow::show(bool show)
 {
+  m_window->setVisible(show);
 }
 
 void *CSFMLWindow::getHandle()
 {
   return m_window;
-}
-
-bool CSFMLWindow::OnInputEvent(sf::Event &event)
-{
-  // Close window: exit
-  if (event.type == sf::Event::Closed)
-    m_bClose = true;
-
-  // Escape key: exit
-  if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
-  {
-    m_window->close();
-    m_bClose = true;
-  }
-  if (event.type == sf::Event::Resized)
-  {
-    glViewport(0, 0, m_Width = event.size.width, m_Height = event.size.height);
-  }
-  return true;
 }
 
 int CSFMLWindow::getWidth()
@@ -99,4 +99,18 @@ int CSFMLWindow::getWidth()
 int CSFMLWindow::getHeight()
 {
   return m_Height;
+}
+
+void CSFMLWindow::setFlags(int flags)
+{
+	m_flags = flags;
+}
+
+void CSFMLWindow::glInit()
+{
+}
+
+void CSFMLWindow::showCursor(bool show)
+{
+  m_window->setMouseCursorVisible(show);
 }

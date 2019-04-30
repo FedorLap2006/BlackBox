@@ -1,0 +1,17 @@
+// PLUGIN PHYS
+#include <BlackBox/include/Plug.h>
+
+int _init_plug();
+int _run_plug(CEngine *engine) {
+	engine->cplug->exit();
+}
+int _end_plug();
+// BUILD
+
+./utils/plug.sh build -rpath C:\myplugins\bb-phys -dc_dir C:\myplugins\bb-phys # -dd_dir
+./utils/plug.sh new -plr -plr-limit  -nobuild C:\myplugins\bb-phys
+# ./utils/plug.sh update 
+
+// ENGINE	
+
+vector<CPlugin> plugins;
