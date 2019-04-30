@@ -26,7 +26,6 @@ void World::draw(float dt) {
     object.second->getShaderProgram()->setUniformValue("lightPos", m_Light->pos);
     object.second->getShaderProgram()->setUniformValue("lightColor", m_Light->color);
     //object.second->getShaderProgram()->setUniformValue("color", glm::vec3(1,0,0));
->>>>>>> 419c8753c15be947c0d89c399f321b939110b965
 
     object.second->draw();
   }

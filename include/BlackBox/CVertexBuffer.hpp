@@ -1,8 +1,7 @@
 #pragma once
 #include <BlackBox/Opengl.hpp>
 
-class CVertexBuffer
-{
+class CVertexBuffer {
 public:
   GLuint id;
   const void *m_Data;

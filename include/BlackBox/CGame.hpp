@@ -72,7 +72,7 @@ public:
   virtual void release() override;
   void input();
 
-  bool init_opbject();
+  bool init_object();
   void setRenderState();
   void render();
 

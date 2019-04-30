@@ -53,7 +53,7 @@ bool CGame::init(IEngine *pSystem)  {
     return false;
   m_inputHandler = m_pSystem->getIInputHandler();
   m_inputHandler->keepMouseInCenter(true);
-  if (!init_opbject()) {
+  if (!init_object()) {
     cout << "Failed init objects" << endl;
     return false;
   }
