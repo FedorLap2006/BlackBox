@@ -1,9 +1,9 @@
 #ifndef CPLAYER_H
 #define CPLAYER_H
 
-#include "GameObject.hpp"
-#include "HackCamera.hpp"
-#include "IGame.hpp"
+#include <BlackBox/GameObject.hpp>
+#include <BlackBox/HackCamera.hpp>
+#include <BlackBox/IGame.hpp>
 
 
 class CPlayer : public GameObject

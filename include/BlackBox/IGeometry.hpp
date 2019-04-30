@@ -1,11 +1,11 @@
 #pragma once
 #include <BlackBox/common.h>
-#include <BlackBox/VertexArrayObject.hpp>
 #include <cassert>
 #include <glm/glm.hpp>
 
-class VertexBuffer;
-class IndexBuffer;
+class CVertexBuffer;
+class CIndexBuffer;
+class CVertexArrayObject;
 
 //typedef glm::vec3 Vertex;
 struct Vertex
@@ -17,12 +17,10 @@ struct Vertex
 
 struct Mesh {
 protected:
-  VertexBuffer *m_Verts;  
-  IndexBuffer *m_Indexes;
+  CVertexArrayObject *m_VAO;
 public:
-  Mesh(VertexBuffer *verts, IndexBuffer *indxs);
+  Mesh(CVertexBuffer *verts, CIndexBuffer *indxs);
 
-  VertexBuffer *getVertexBuffer();
-  IndexBuffer *getIndexBuffer();
+  void draw();
 };
 

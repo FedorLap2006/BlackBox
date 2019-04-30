@@ -1,17 +1,13 @@
 #include <BlackBox/IGeometry.hpp>
+#include <BlackBox/VertexArrayObject.hpp>
 
-Mesh::Mesh(VertexBuffer *verts, IndexBuffer *indxs) :
-   m_Verts(verts), m_Indexes(indxs) 
+Mesh::Mesh(CVertexBuffer *verts, CIndexBuffer *indxs)
+
 {
-  
+  m_VAO = new CVertexArrayObject(*verts, *indxs);
 }
 
-VertexBuffer *Mesh::getVertexBuffer()
+void Mesh::draw()
 {
-  return m_Verts;
-}
-
-IndexBuffer *Mesh::getIndexBuffer()
-{
-  return m_Indexes;
+  m_VAO->draw();
 }

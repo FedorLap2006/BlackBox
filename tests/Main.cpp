@@ -40,12 +40,10 @@ int main(int argc, char *argv[]) {
   cout << path << endl;
 
   IEngine *pEngine = CreateIEngine(nullptr);
-  IGame *game = CreateIGame("MyGame");
-	cout << "ISystem created" << endl;
-  if (game->init(pEngine)) {
-		cout << "IGame created" << endl;
-    game->run();  
-	}
+  cout << "IEngine created" << endl;
+  if (pEngine->Init()){
+    pEngine->Start();
+  }
 
   return 0;
 }

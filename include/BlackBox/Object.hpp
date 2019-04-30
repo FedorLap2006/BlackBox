@@ -5,6 +5,7 @@
 #include <BlackBox/IDrawable.hpp>
 #include <BlackBox/CShader.hpp>
 #include <BlackBox/Texture.hpp>
+#include <BlackBox/Material.hpp>
 #include <glm/glm.hpp>
 
 struct Transform
@@ -22,7 +23,7 @@ protected:
   Mesh *m_Mesh;
   CShaderProgram *m_Shader;
   OBJType m_type;
-  Texture *m_texture = nullptr;
+  Material *m_material;
   Object();
   Object(const Object &obj);
   static void parse(std::string filename, std::vector<Vertex> &vs, CShaderProgram **shader);

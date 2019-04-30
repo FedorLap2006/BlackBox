@@ -7,9 +7,6 @@ Texture::Texture()
 
 Texture::Texture(std::string name)
 {
-  sf::Texture text;
-  text.loadFromFile("res/images/" + name);
-  id = text.getNativeHandle();
   sf::Image img_data;
   if (!img_data.loadFromFile("res/images/" + name))
   {

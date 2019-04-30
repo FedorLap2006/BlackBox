@@ -1,6 +1,6 @@
 #include <BlackBox/Triangle.hpp>
-#include <BlackBox/VertexBuffer.hpp>
-#include <BlackBox/IndexBuffer.hpp>
+#include <BlackBox/CVertexBuffer.hpp>
+#include <BlackBox/CIndexBuffer.hpp>
 #include <BlackBox/Opengl.hpp>
 #include <iostream>
 
@@ -25,8 +25,8 @@ Plane::Plane(CShaderProgram *program) :
     0,1,2
   };
 
-  VertexBuffer *vb = new VertexBuffer(m_Vertices.data(),static_cast<GLint>(m_Vertices.size()));
-  IndexBuffer *ib;// = new IndexBuffer(m_Indeces.data(),m_Indeces.size());
+  CVertexBuffer *vb = new CVertexBuffer(m_Vertices.data(),static_cast<GLint>(m_Vertices.size()));
+  CIndexBuffer *ib;// = new IndexBuffer(m_Indeces.data(),m_Indeces.size());
   m_Mesh = new Mesh(vb, nullptr);
 }
 

@@ -16,15 +16,21 @@ class CInputHandler : public IInputHandler
     sf::Vector2i curr_pos;
 		bool x_wraped;
 		bool y_wraped;
+    bool keeped;
   }Mouse;
 
 public:
   CInputHandler(IWindow *window);
   virtual ICommand *handleInput() override;
 
-  virtual void AddEventListener(IInputEventListener * pListener) override;
+  virtual void PushEventListener(IInputEventListener * pListener) override;
 
   // IInputHandler interface
 public:
   virtual sf::Vector2i getDeltaMouse() override;
+  virtual void keepMouseInCenter(bool keep) override;
+
+  // IInputHandler interface
+public:
+  virtual void PopEventListener() override;
 };

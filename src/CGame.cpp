@@ -39,40 +39,40 @@ CGame::CGame(std::string title) :
   m_PlayList.addTrack("japan.ogg");
 }
 
+CGame::~CGame()
+{
+  delete m_World;
+}
+
 bool CGame::init(IEngine *pSystem)  {
   m_pSystem = pSystem;
+  m_pRender = pSystem->getIRender();
   p_gIGame = reinterpret_cast<IGame*>(this);
-  m_Window = new CWindow(m_Title); 
-	m_Window->setFlags(CWindow::DRAW_GUI);
-  if (m_Window != nullptr ) {
-    if (!m_Window->init() || !m_Window->create())
-      return false;
-		cout << "Window susbsystem inited" << endl;
-
-    if ((m_inputHandler = new CInputHandler(m_Window)) == nullptr)
-      return false;
-		if (!init_opbject()) {
-			cout << "Failed init objects" << endl;
-			return false;
-		}
-		cout << "Objects inited" << endl;
-  } 
-  glm::vec3 player_pos = m_World->operator[]("MyPlayer")->m_transform.position;
-  glm::vec3 pos = glm::vec3(0,10,10);//0, player_pos.y + 3, 0);
+  m_Gui = new GUI(this);
+  if (m_Gui == nullptr)
+    return false;
+  m_inputHandler = m_pSystem->getIInputHandler();
+  m_inputHandler->keepMouseInCenter(true);
+  if (!init_opbject()) {
+    cout << "Failed init objects" << endl;
+    return false;
+  }
+  cout << "Objects inited" << endl;
+  glm::vec3 player_pos = {0,0,0};//m_World->operator[]("MyPlayer")->m_transform.position;
+  glm::vec3 pos = {0,0,3};//glm::vec3(player_pos.x, player_pos.y + 15, player_pos.z);
   // create an camera looking at the light
   m_camera1 = new CCamera(
     pos,
-    glm::normalize(player_pos - pos),
+    player_pos,
     glm::vec3(0,1,0)
   );
 	camControl = new CameraController(m_camera1);
-  m_camera1->setView(0,0,m_Window->getWidth(),m_Window->getHeight());
+  m_camera1->setView(0,0,m_pRender->GetWidth(),m_pRender->GetHeight());
   m_camera2 = new CCamera();
   m_player->attachCamera(m_camera1);
-  m_inputHandler->AddEventListener(m_camera1);
-  m_inputHandler->AddEventListener(m_camera2);
-  m_inputHandler->AddEventListener(reinterpret_cast<CWindow*>(m_Window));
-  m_inputHandler->AddEventListener(reinterpret_cast<CGame*>(this));
+  m_inputHandler->PushEventListener(m_camera1);
+  m_inputHandler->PushEventListener(reinterpret_cast<CGame*>(this));
+  //m_inputHandler->PushEventListener(m_player);
   m_World->setCamera(m_camera1);
   m_active_camera = m_camera1;
   //m_World->setCamera(camera2);
@@ -81,24 +81,25 @@ bool CGame::init(IEngine *pSystem)  {
 
 bool CGame::update() {
   sf::Time deltaTime = deltaClock.restart();
-  while (!m_Window->closed() &&  m_running) {
-    m_deltaTime = deltaTime.asMicroseconds()*0.001;
-    input();
-    m_Window->update();
-		if (!m_isPaused)
-		{
-			gotoGame();
-			m_World->update(m_deltaTime);
-			setRenderState();
-		}
-		else gotoMenu();
 
-    render();
-		if (m_isPaused)
-			guiControls();
-		m_Window->swap();
+  m_deltaTime = deltaTime.asSeconds();
+  input();
+  m_pRender->Update();
+  if (!m_isPaused)
+  {
+    gotoGame();
+    m_World->update(m_deltaTime);
   }
-	return true;
+  else gotoMenu();
+
+  setRenderState();
+  m_pRender->BeginFrame();
+  render();
+  if (m_isPaused)
+    m_Gui->Draw();
+  m_pRender->EndFrame();
+
+  return m_running;
 }
 
 bool CGame::run() {
@@ -108,8 +109,13 @@ bool CGame::run() {
   m_PlayList.play();
   m_isMusicPlaying = true;
 	gotoGame();
-  update();
   return true;
+}
+
+void CGame::release()
+{
+  cout << "Game released" << endl;
+  delete this;
 }
 
 void CGame::input()
@@ -121,8 +127,7 @@ void CGame::input()
 }
 
 bool CGame::init_opbject() {
-	//world.add("triangle", Primitive::create(Primitive::TRIANGLE, m_ShaderProgram));
-  Texture *text = new Texture("container.jpg");
+  Texture *text_container = new Texture("container.jpg");
   Texture *plane_texture = new Texture("check.jpg");
   Texture *player_texture = new Texture("pengium.png");
   Object *obj;
@@ -131,64 +136,47 @@ bool CGame::init_opbject() {
   Object *BB = Primitive::create(Primitive::CUBE, "vertex.glsl", "fragment.glsl");
   Object *plane = Primitive::create(Primitive::PLANE, "vertex.glsl", "fragment.glsl");
   m_player = new CPlayer();
-  m_World->add("MyPlayer", m_player);
   CShaderProgram *shader = new CShaderProgram("res/" "vertex.glsl", "res/""fragment.glsl");
   Object *light =  Primitive::create(Primitive::CUBE,"vertex.glsl", "basecolor.frag");
   light->move(light_pos);
   light->scale(glm::vec3(0.3f));
-  //plane->moveTo(glm::vec3(0,0,0));
   plane->moveTo(glm::vec3(0,0,0));
-  //plane->rotate(90, glm::vec3(1,0,0));
   plane->scale(glm::vec3(50,50,50));
   plane->setTexture(plane_texture);
   plane->move(glm::vec3(0,-3,0));
-  //m_player->setTexture(text);
   m_player->setShaderProgram(shader);
   m_player->scale({10,10,10});
   m_player->setTexture(player_texture);
 
   BB->scale(glm::vec3(70,70,70));
-  m_World->add("light", light);
-  m_World->add("plane", plane);
-  m_World->add("BB", BB);
+  cube->scale(glm::vec3(2));
+  cube->move(glm::vec3(3,1, 3));
+  cube->setTexture(text_container);
+  //cube->rotate(10, glm::vec3(0,1,0));
+  //m_World->add("light", light);
+  //m_World->add("plane", plane);
+  m_World->add("MyCube", cube);
+  //m_World->add("MyPlayer", m_player);
+  //m_World->add("BB", BB);
   shader->create();
-  for (int i = 0; i < 20; i++)
+  for (int i = 0; i < 0; i++)
   {
     obj = Object::load("cube.obj");
     obj->setShaderProgram(shader);
     obj->setType(OBJType::TPRIMITIVE);
     obj->moveTo({
      (glm::vec3(0,0,0))
-    /*
-      static_cast<float>(rand() % 45 - 7),
-      static_cast<float>(rand() % 45 - 7),
-      static_cast<float>(rand() % 45 - 7)
-      });
-                    */
                 });
     obj->scale(glm::vec3(i*20));
 
-  /*
-    obj->rotate(
-      static_cast<float>(rand() % 360),
-      {
-      static_cast<float>(rand() % 65 - 7),
-      static_cast<float>(rand() % 65 - 7),
-      static_cast<float>(rand() % 65 - 7)
-      });
-      */
     obj->setTexture(plane_texture);
     m_World->add("cube" + std::to_string(i), obj);
   }
-  GameObject *go = GameObject::create(Primitive::CUBE);
-  go->setTexture(text);
-  go->setShaderProgram(cube->getShaderProgram());
-  m_inputHandler->AddEventListener(go);
-  m_inputHandler->AddEventListener(m_player);
-  //m_World->add("listener", reinterpret_cast<Object*>(go));
-  /*
-  world.add("triangle", new Triangle(m_ShaderProgram));
-	*/
+  //GameObject *go = GameObject::create(Primitive::CUBE);
+  //go->setTexture(text);
+  //go->setShaderProgram(cube->getShaderProgram());
+  //m_inputHandler->PushEventListener(go);
+  m_inputHandler->PushEventListener(m_player);
   return true;
 }
 
@@ -206,78 +194,9 @@ void CGame::setRenderState()
 
 void CGame::render()
 {
-  m_Window->clear();
-  /* Rendering code here */
   m_active_camera->update(m_deltaTime);
-  /*
-  m_camera1->setView(0,0,
-         m_Window->getWidth(),m_Window->getHeight()
-         );
-         */
   m_World->setCamera(m_camera1);
   m_World->draw(m_deltaTime);
-  /*
-  m_camera2->setView(
-         m_Window->getWidth()/2,0,
-         m_Window->getWidth(),m_Window->getHeight()
-         );
-  m_World->setCamera(m_camera2);
-  m_World->draw(m_deltaTime);
-  */
-  //m_Window->swap();
-}
-
-
-void CGame::guiControls()
-{
-	static bool show_player=1, show_camera=1, show_demo=0;
-	
-	ImGui::Begin("Control panel");
-		ImGui::Checkbox("Show Plyer", &show_player);
-		ImGui::Checkbox("Show Camera", &show_camera);
-		ImGui::Checkbox("Show Demo", &show_demo);
-	ImGui::End();
-	if (show_player) {
-		ImGui::Begin("Music Player");
-		if (ImGui::Button("Pause"))
-		{
-			m_PlayList.pause();
-		}
-		if (ImGui::Button("Play"))
-		{
-			m_PlayList.play();
-		}
-		if (ImGui::Button("Next"))
-		{
-			m_PlayList.next();
-		}
-		if (ImGui::Button("Previos"))
-		{
-			m_PlayList.play();
-		}
-		if (ImGui::Button("Stop"))
-		{
-			m_PlayList.stop();
-		}
-		ImGui::End();
-	}
-
-	if (show_camera) {
-		ImGui::Begin("Camera");
-			if (ImGui::Button("Reset"))
-			{
-				m_active_camera->reset();	
-			}
-		ImGui::End();
-	}
-	if (show_demo)
-	{
-		ImGui::ShowDemoWindow();
-	}
-	if (ImGui::Button("Exit"))
-	{
-		m_running = false;	
-	}
 }
 
 extern "C" IGame *CreateIGame(const char *title) {
@@ -294,18 +213,22 @@ bool CGame::OnInputEvent(sf::Event &event)
       switch (event.key.code) {
       case sf::Keyboard::Right:
         m_PlayList.next();
+        return true;
       }
       switch (event.key.code) {
       case sf::Keyboard::Left:
         m_PlayList.prev();
+        return true;
       }
       switch (event.key.code) {
       case sf::Keyboard::Up:
         m_PlayList.setVolume(m_PlayList.getVolume() + 2.f);
+        return true;
       }
       switch (event.key.code) {
       case sf::Keyboard::Down:
         m_PlayList.setVolume(m_PlayList.getVolume() - 2.f);
+        return true;
       }
     }
     else {
@@ -329,8 +252,9 @@ bool CGame::OnInputEvent(sf::Event &event)
         }
         m_isMusicPlaying = !m_isMusicPlaying;
         return true;
-      case sf::Keyboard::Backspace:
-				m_isPaused = !m_isPaused;
+      case sf::Keyboard::Escape:
+        //m_isPaused = !m_isPaused;
+        m_running = false;
         return true;
       }
     }
@@ -348,8 +272,9 @@ void CGame::gotoGame()
 	if (!m_InGame)
 	{
 		m_InGame = true;
-		reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(false);
-	}
+    //reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(false);
+    m_inputHandler->keepMouseInCenter(true);
+  }
 }
 
 void CGame::gotoMenu()
@@ -357,6 +282,7 @@ void CGame::gotoMenu()
 	if (m_InGame)
 	{
 		m_InGame = false;
-		reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(true);
-	}
+    //reinterpret_cast<sf::RenderWindow*>(m_Window->getHandle())->setMouseCursorVisible(true);
+    m_inputHandler->keepMouseInCenter(false);
+  }
 }

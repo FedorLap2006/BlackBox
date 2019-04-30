@@ -1,20 +1,23 @@
-/*
 #ifndef VERTEXARRAYOBJECT_H
 #define VERTEXARRAYOBJECT_H
+#include <BlackBox/Opengl.hpp>
+#include <BlackBox/CVertexBuffer.hpp>
+#include <BlackBox/CIndexBuffer.hpp>
+#include <BlackBox/IGeometry.hpp>
 
 #include <vector>
-//#include <IGeometry.hpp>
 
-class VertexArrayObject
+class CVertexArrayObject
 {
 private:
   GLuint VAO;
   GLuint VBO;
-  GLuint IBO;
+  GLuint EBO;
+  GLsizei m_IndexCount;
 public:
-  VertexArrayObject();
-  VertexArrayObject(std::vector<Vertex> &vb, std::vector<int> &ib);
+  CVertexArrayObject(CVertexBuffer &vb, CIndexBuffer &ib);
+
+  void draw();
 };
 
 #endif // VERTEXARRAYOBJECT_H
-*/
