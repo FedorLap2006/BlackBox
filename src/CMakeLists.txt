@@ -18,6 +18,13 @@ elseif(GLEW_LOADER)
 endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/glm glm)
 add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/SFML SFML)
+if (USE_LUA)
+	add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/sol2 sol2)
+else()
+endif()
+add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/soil soil)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/submodules/imgui-sfml imgui-sfml)
+#add_subdirectory(imgui)
 find_package(OpenGL REQUIRED)
 #--------------------------------------------------
 if (WIN32)
@@ -29,11 +36,15 @@ if (WIN32)
     message(FAILED "GDI32 notfound")
   endif()
 endif()
+
 #--------------------------------------------------
 include_directories(
   "${SFML_SOURCE_DIR}/include"
   " ${CMAKE_SOURCE_DIR}/include"
 )
+
+
+
 #--------------------------------------------------
 #find_package(Boost COMPONENTS system filesystem REQUIRED)
 #...
@@ -159,6 +170,11 @@ elseif(GLAD_LOADER)
   target_sources(${PROJECT_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/src/GladLoader.cpp
   )
+endif()
+
+if (USE_LUA)
+	target_link_libraries(${PROJECT_NAME} sol2)
+else()
 endif()
 
 if (USE_SFML)
