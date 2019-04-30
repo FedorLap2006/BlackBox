@@ -130,7 +130,6 @@ target_sources(${PROJECT_NAME}
   PRIVATE ${BLACKBOX_INCLUDE_DIRS}/VertexArrayObject.hpp
   PRIVATE ${BLACKBOX_INCLUDE_DIRS}/VertexBuffer.hpp
   PRIVATE ${BLACKBOX_INCLUDE_DIRS}/World.hpp
->>>>>>> 7c3d18715096fa131f91ffe8b3eb6858bc4339af
 )
 #--------------------------------------------------
 if (LINUX OR UNIX OR APPLE)
