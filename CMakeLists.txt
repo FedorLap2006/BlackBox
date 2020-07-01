@@ -1,70 +1,47 @@
-cmake_minimum_required(VERSION 3.0)
-project(BlackBox CXX)
+cmake_minimum_required(VERSION 3.10)
+#project(BlackBox)
 
-file(
-  GLOB
-  SOURCES
-  src/*.cpp
-    )
-file(
-  GLOB 
-  HEADERS 
-  include/*.hpp
-)
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+	message(
+		FATAL_ERROR 
+		"Use build directory different from source direcory!"	
+	)
+endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/Cmake/modules/")
+if(NOT DEFINED BLACKBOX_DIR)
+	set(BLACKBOX_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+endif()
+
+set(ALL_PROJECT_SOURCES)
+# Part of the setup is split into the InitialSetup file so projects created by cryrun can include it.
+# This needs to be re-visited after the toolchain files are cleaned up.
+include(Tools/CMake/InitialSetup.cmake)
+
+# Setting the project version
+if (NOT VERSION)
+	if (METADATA_VERSION)
+		set(VERSION ${METADATA_VERSION})
+	else()
+		set(VERSION "1.0.0.0")
+	endif()
+endif()
+set(METADATA_VERSION ${VERSION} CACHE STRING "Version number for executable metadata" FORCE)
+
+# Declare the project.
+set(METADATA_PROJECT_NAME "BLACKBOX" CACHE STRING "Name of the solution project")
+project("${METADATA_PROJECT_NAME}_${BUILD_PLATFORM}"
+		VERSION "${METADATA_VERSION}"
+		LANGUAGES C CXX)
+
 ###################################################
-#GLFW
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-#--------------------------------------------------
-add_subdirectory(submodules/glfw)
-find_package(OpenGL REQUIRED)
-#--------------------------------------------------
-if (WIN32)
-  find_library(GDI32_LIBRARY gdi32)
-  if(GDI32_LIBRARY_FOUND)
-    message(FATAL "gdi32 notfound")
-  else()
-    message(STATUS "GDI32 founded")
-    link_libraries(${GDI32_LIBRARY})
-  endif()
-endif()
-#--------------------------------------------------
-find_package(GLEW REQUIRED)
-if (GLEW_FOUND)
-  include_directories(${GLEW_INCLUDE_DIRS})
-  link_libraries(${GLEW_LIBRARIES})
-else()
-  message(FATAL "glew not found")
-endif()
-#--------------------------------------------------
-find_package(GLM REQUIRED)
-if (GLM_FOUND)
-  include_directories(${GLM_INCLUDE_DIRS})
-  link_libraries(${GLM_LIBRARIES})
-  message(STATUS "GLM founded")
-endif()
-#--------------------------------------------------
-include_directories(
-  "${PROJECT_SOURCE_DIR}/include"
-)
-#--------------------------------------------------
+include(Tools/CMake/Configure.cmake)
 ###################################################
-add_library(${PROJECT_NAME}  ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} glfw)
-target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+include(CPack)
+# Packaging support
+set(CPACK_PACKAGE_VENDOR "fromasmtodisasm")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Some summary")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
-add_executable(${PROJECT_NAME}_test  ../tests/Main.cpp ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
-
-install(
-  TARGETS ${PROJECT_NAME}_test ${PROJECT_NAME}  
-  RUNTIME DESTINATION ${PROJECT_NAME}/bin
-  LIBRARY DESTINATION ${PROJECT_NAME}/lib
-  ARCHIVE DESTINATION ${PROJECT_NAME}/lib/static
-)
-
-
+set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
+set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\bin\\\\Launcher.exe'")
