@@ -1,21 +1,7 @@
-#version 450 core
+#version 330 core
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
 
-
-interface vs_out 
-{
-	vec3 get_color();	
-};
-
-struct vs_out_impl : vs_out 
-{
-	vec3 get_color()
-	{
-
-		return vec3(1, 0,0);
-	}
-};
 
 in VS_OUT {
     vec3 FragPos;
@@ -29,6 +15,14 @@ struct FogInfo {
 	float maxDist;
 	float minDist;
 	vec3 color;
+};
+struct Light {
+    // vec3 position; //Ќе требуетс€ дл€ направленного источника.
+    vec3 direction;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 uniform FogInfo Fog;
 
@@ -49,6 +43,8 @@ uniform float bloomThreshold = 0.0f;
 uniform bool isTerrain = false;
 uniform bool shadowOn = false;
 uniform float alpha = 1.0;
+
+uniform Light dirLight;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -83,49 +79,33 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
+#define SH 64
     vec3 color = texture(diffuseMap, fs_in.TexCoords).rgb;
-	//vec3 color = vs_out_impl::get_color(); // Intresting possibility
 	vec3 emissive = vec3(0.0f);
 	if (has_emissive)
 	{
 		emissive = texture(emissiveMap, fs_in.TexCoords).rgb;
 	}
     vec3 normal = normalize(fs_in.Normal);
-    vec3 lightColor = vec3(1.1);
-	if (!lightOn)
-	{
-		FragColor = vec4(color, 1.0f);
-		return;
-	}
 
     // ambient
-    vec3 ambient = 0.15 * color; 
+    vec3 ambient = dirLight.ambient*color; 
     // diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
-    float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 lightDir = normalize(-dirLight.direction);
+    float diff = max(dot(normal, lightDir), 0.0) + 0.2;
+    vec3 diffuse = diff * dirLight.diffuse * color;
     // specular
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
-    float spec = 0.0;
-
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
-    vec3 specular = spec * lightColor;
+    vec3 reflectDir = reflect(-lightDir, normal);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), SH);
+    vec3 specular = dirLight.specular * spec;// * texture(SH, fs_in.TexCoords).rgb;  
+	vec3 mat_spec = vec3(0.1);
 	if (has_specular)
 	{
-
-
-		specular *= vec3(texture(specularMap, fs_in.TexCoords));
-		//FragColor = vec4(10, 0, 0, 1.0);
-		//specular *= vec3(10, 0, 0);
-
+		mat_spec = texture(specularMap, fs_in.TexCoords).rgb;
 	}
-	specular + vec3(10, 0, 0);
-    // calculate shadow
-    float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
-
-    vec3 lighting =(ambient + (1.0 - shadow) * (diffuse + specular)) * color + emissive * emissive_factor;
-
-	vec3 result = lighting;
+	specular *= mat_spec;
+        
+    vec3 result = ambient + diffuse + specular;
 	FragColor = vec4(result, alpha);
 }

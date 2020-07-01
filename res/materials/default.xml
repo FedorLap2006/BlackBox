@@ -9,17 +9,25 @@
   </material>
   <material name="sprite2">
     <textures>
-      <texture type="diffuse" name="container2.png"/>
-      <texture type="emissive" name="emissive.png"/>
-      <texture type="specular" name="container2_specular.png"/>
+      <texture type="diffuse" name="DirectXLogo.png"/>
     </textures>
     <shader name="phong"/>
   </material>
-  <material name="specular_box">
+  <material name="dx_box" alpha="0.2">
     <textures>
-      <texture type="diffuse" name="container2.png"/>
-      <texture type="emissive" name="emissive.png"/>
-      <texture type="specular" name="container2_specular.png"/>
+      <!--<texture type="diffuse" name="container2.png"/>-->
+      <texture type="diffuse" name="opengl.png"/>
+      <!--<texture type="emissive" name="emissive.png"/>-->
+      <!--<texture type="specular" name="container2_specular.png"/>-->
+    </textures>
+    <shader name="phong"/>
+  </material>
+  <material name="specular_box" alpha="0.2">
+    <textures>
+      <!--<texture type="diffuse" name="container2.png"/>-->
+      <texture type="diffuse" name="DirectXLogo.png"/>
+      <!--<texture type="emissive" name="emissive.png"/>-->
+      <!--<texture type="specular" name="container2_specular.png"/>-->
     </textures>
     <shader name="phong"/>
   </material>
@@ -76,9 +84,9 @@
     </textures>
     <shader name="phong"/>
   </material>
-  <material name="player">
+  <material name="player" alpha="0.1">
     <textures>
-      <texture type="diffuse" name="coral.png"/>
+      <texture type="diffuse" name="pengium.png"/>
       <texture type="specular" name="gray.png"/>
     </textures>
     <shader name="phong"/>
@@ -102,7 +110,7 @@
     <textures>
       <texture type="diffuse" name="water.jpg"/>
     </textures>
-    <shader name="phong"/>
+    <shader name="reflect"/>
   </material>
   <material name="default">
     <textures>
@@ -118,6 +126,11 @@
       <shader type="vertex" name="shadowmap.vs"/>
       <shader type="fragment" name="shadowmap.frag"/>
     </phong>    
+    <wireframe_phong>
+      <shader type="vertex" name="shadowmap.vs"/>
+      <shader type="geometry" name="wireframe.gs"/>
+      <shader type="fragment" name="shadowmap.frag"/>
+    </wireframe_phong>    
     <shadow>
       <shader type="vertex" name="shadowmap.vs"/>
       <shader type="fragment" name="shadowmap.frag"/>
